@@ -1,0 +1,152 @@
+.memory-form-page {
+  padding-bottom: calc(70rpx + env(safe-area-inset-bottom));
+}
+
+.photo-card,
+.form-card {
+  padding: 30rpx;
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.section-title,
+.form-label {
+  color: #38463f;
+  font-size: 25rpx;
+  font-weight: 700;
+}
+
+.section-hint {
+  margin-top: 7rpx;
+  color: #929b96;
+  font-size: 20rpx;
+}
+
+.photo-count {
+  padding: 7rpx 13rpx;
+  color: #7a897f;
+  font-size: 20rpx;
+  background: #f0f4f2;
+  border-radius: 999rpx;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14rpx;
+  margin-top: 25rpx;
+}
+
+.photo-item,
+.photo-picker {
+  position: relative;
+  height: 190rpx;
+  overflow: hidden;
+  border-radius: 20rpx;
+}
+
+.selected-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.remove-photo {
+  position: absolute;
+  top: 8rpx;
+  right: 8rpx;
+  display: flex;
+  width: 44rpx;
+  height: 44rpx;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 31rpx;
+  background: rgba(38, 48, 43, 0.68);
+  border-radius: 50%;
+}
+
+.photo-picker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #73847b;
+  font-size: 21rpx;
+  background: #f1f5f3;
+  border: 2rpx dashed #cbd9d2;
+}
+
+.picker-plus {
+  margin-bottom: 6rpx;
+  color: #668b79;
+  font-size: 48rpx;
+  line-height: 1;
+}
+
+.form-card {
+  margin-top: 24rpx;
+}
+
+.form-group {
+  margin-bottom: 28rpx;
+}
+
+.last-group {
+  margin-bottom: 0;
+}
+
+.required {
+  color: #b87670;
+}
+
+.form-input,
+.picker-field,
+.form-textarea {
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 12rpx;
+  color: #34423b;
+  font-size: 25rpx;
+  background: #f6f8f7;
+  border: 1rpx solid #e1e8e4;
+  border-radius: 18rpx;
+}
+
+.form-input,
+.picker-field {
+  height: 82rpx;
+  padding: 0 22rpx;
+  line-height: 82rpx;
+}
+
+.picker-field {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-textarea {
+  min-height: 190rpx;
+  padding: 20rpx 22rpx;
+  line-height: 1.6;
+}
+
+.save-button {
+  height: 88rpx;
+  margin-top: 30rpx;
+  color: #ffffff;
+  font-size: 27rpx;
+  font-weight: 650;
+  line-height: 88rpx;
+  background: #668b79;
+  border-radius: 24rpx;
+  box-shadow: 0 12rpx 25rpx rgba(64, 104, 84, 0.2);
+}
+
+.save-button::after {
+  border: 0;
+}

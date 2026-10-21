@@ -1,0 +1,168 @@
+.account-page {
+  padding-bottom: 70rpx;
+}
+
+.identity-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 46rpx 34rpx 38rpx;
+  background: linear-gradient(145deg, #ffffff, #eef5f1);
+}
+
+.account-avatar {
+  display: flex;
+  width: 120rpx;
+  height: 120rpx;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 52rpx;
+  border-radius: 38rpx;
+  box-shadow: 0 10rpx 26rpx rgba(54, 72, 63, 0.14);
+}
+
+.avatar-image {
+  display: block;
+}
+
+.identity-name {
+  margin-top: 24rpx;
+  color: #2f3c36;
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.identity-signature {
+  max-width: 560rpx;
+  margin-top: 10rpx;
+  color: #6f7a74;
+  font-size: 24rpx;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.status-pill {
+  margin-top: 20rpx;
+  padding: 8rpx 18rpx;
+  color: #4f7563;
+  font-size: 21rpx;
+  background: #e9f2ed;
+  border-radius: 999rpx;
+}
+
+.status-pill.pending,
+.status-pill.rejected {
+  color: #8b6b42;
+  background: #f7efe4;
+}
+
+.status-pill.disabled {
+  color: #99635e;
+  background: #f7eae8;
+}
+
+.info-card {
+  margin-top: 24rpx;
+  padding: 4rpx 30rpx;
+}
+
+.info-row {
+  display: flex;
+  min-height: 92rpx;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.info-row + .info-row {
+  border-top: 1rpx solid #e8eeeb;
+}
+
+.info-label {
+  color: #77827c;
+  font-size: 24rpx;
+}
+
+.info-value {
+  color: #34423b;
+  font-size: 25rpx;
+  font-weight: 600;
+}
+
+.admin-entry {
+  display: flex;
+  align-items: center;
+  margin-top: 24rpx;
+  padding: 28rpx 30rpx;
+}
+
+.admin-entry-icon {
+  display: flex;
+  width: 68rpx;
+  height: 68rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: #527462;
+  font-size: 27rpx;
+  font-weight: 700;
+  background: #e8f1ec;
+  border-radius: 21rpx;
+}
+
+.admin-entry-content {
+  min-width: 0;
+  margin-left: 22rpx;
+}
+
+.admin-entry-title {
+  color: #33413a;
+  font-size: 28rpx;
+  font-weight: 700;
+}
+
+.admin-entry-description {
+  margin-top: 7rpx;
+  color: #7a857f;
+  font-size: 22rpx;
+}
+
+.admin-entry-badge {
+  min-width: 36rpx;
+  margin-left: auto;
+  padding: 4rpx 9rpx;
+  color: #ffffff;
+  font-size: 19rpx;
+  line-height: 28rpx;
+  text-align: center;
+  background: #c47a65;
+  border-radius: 999rpx;
+}
+
+.admin-entry-arrow {
+  margin-left: 16rpx;
+  color: #a4ada8;
+  font-size: 38rpx;
+}
+
+.logout-button {
+  margin-top: 34rpx;
+  color: #a45f58;
+  font-size: 27rpx;
+  font-weight: 600;
+  background: #fff7f5;
+  border: 1rpx solid #efdeda;
+  border-radius: 22rpx;
+}
+
+.logout-button::after {
+  border: 0;
+}
+
+.logout-tip {
+  margin-top: 16rpx;
+  color: #929b96;
+  font-size: 21rpx;
+  line-height: 1.55;
+  text-align: center;
+}

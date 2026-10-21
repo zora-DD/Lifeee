@@ -1,0 +1,141 @@
+<view class="page routine-page">
+  <view class="page-header">
+    <view class="eyebrow">HABIT TRACKER</view>
+    <view class="page-title">习惯打卡</view>
+    <view class="page-subtitle">把想长期坚持的小事，认真完成每一天。</view>
+  </view>
+
+  <view class="habit-overview card">
+    <view class="overview-main">
+      <view class="overview-kicker">TODAY</view>
+      <view class="overview-title">今天的坚持</view>
+      <view class="overview-text">{{enabledCount ? '完成一点，也是在向前走' : '先添加一个想坚持的习惯'}}</view>
+    </view>
+    <view class="overview-score">
+      <view><text>{{doneCount}}</text> / {{todayTotal}}</view>
+      <view class="overview-rate">{{todayRate}}%</view>
+    </view>
+    <view class="overview-progress"><view style="width: {{todayRate}}%"></view></view>
+    <view class="overview-meta">
+      <view><text>{{enabledCount}}</text> 个活跃习惯</view>
+      <view><text>{{monthCheckins}}</text> 次本月打卡</view>
+      <view><text>{{monthRate}}%</text> 本月完成率</view>
+    </view>
+  </view>
+
+  <view class="routine-section-heading">
+    <text>我的习惯</text>
+    <view class="scope-tabs">
+      <view class="scope-tab {{routineScope === 'today' ? 'active' : ''}}" data-scope="today" bindtap="selectRoutineScope">今天</view>
+      <view class="scope-tab {{routineScope === 'all' ? 'active' : ''}}" data-scope="all" bindtap="selectRoutineScope">全部</view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="empty-card card">
+    <view class="empty-title">正在加载</view>
+  </view>
+  <view wx:elif="{{visibleRoutines.length === 0}}" class="empty-card card">
+    <view class="empty-icon">✓</view>
+    <view class="empty-title">{{routines.length ? '今天没有需要打卡的习惯' : '还没有习惯'}}</view>
+    <view class="empty-text">{{routines.length ? '切换到“全部”可以查看和管理习惯。' : '从一件容易坚持的小事开始吧。'}}</view>
+  </view>
+
+  <view wx:for="{{visibleRoutines}}" wx:key="id" class="routine-manage-card card {{item.enabled ? '' : 'disabled'}}">
+    <view class="routine-manage-top">
+      <view class="habit-icon">{{item.icon}}</view>
+      <view class="routine-manage-main">
+        <view class="routine-manage-title">{{item.title}}</view>
+        <view class="routine-manage-status">
+          <text>{{item.timeOfDay}}</text>
+          <text> · {{item.repeatLabel}} · </text>
+          <text>{{item.enabled ? (item.scheduledToday ? (item.checkedToday ? '今天已完成' : '今天待完成') : '今天休息') : '已暂停'}}</text>
+        </view>
+      </view>
+      <view
+        class="routine-checkin {{item.checkedToday ? 'checked' : ''}} {{item.scheduledToday ? '' : 'inactive'}} {{checkingId === item.id ? 'saving' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="toggleCheckin"
+        hover-class="tap-feedback"
+      >{{item.checkedToday ? '✓' : ''}}</view>
+      <view class="routine-more" data-id="{{item.id}}" bindtap="openRoutineActions">•••</view>
+    </view>
+    <view class="habit-stats">
+      <view class="habit-stat"><text>{{item.currentStreak}}</text><view>连续次数</view></view>
+      <view class="habit-stat"><text>{{item.totalCheckins}}</text><view>累计打卡</view></view>
+      <view class="habit-stat"><text>{{item.last7DayRate}}%</text><view>近 7 天</view></view>
+    </view>
+    <view class="history-title">最近 7 天</view>
+    <view class="history-row">
+      <view wx:for="{{item.history}}" wx:key="date" wx:for-item="day" class="history-day {{day.scheduled ? '' : 'rest'}}">
+        <view class="history-weekday">{{day.weekday}}</view>
+        <view class="history-dot {{day.completed ? 'completed' : ''}}">{{day.completed ? '✓' : day.dayText}}</view>
+      </view>
+    </view>
+    <view class="month-entry" data-id="{{item.id}}" bindtap="openMonthCalendar">查看本月打卡日历 <text>›</text></view>
+  </view>
+
+  <button class="add-routine-button" bindtap="createRoutine">＋ 添加习惯</button>
+
+  <view wx:if="{{showEditor}}" class="editor-mask" bindtap="closeEditor" catchtouchmove="noop">
+    <view class="editor-sheet" catchtap="noop">
+      <view class="editor-handle"></view>
+      <view class="editor-title">{{editingId ? '编辑习惯' : '添加习惯'}}</view>
+      <view class="editor-field">
+        <view class="editor-label">习惯名称</view>
+        <input class="editor-input" value="{{form.title}}" maxlength="120" placeholder="例如：阅读、吃药" bindinput="onTitleInput" />
+      </view>
+      <view class="editor-field">
+        <view class="editor-label">计划时间</view>
+        <picker mode="time" value="{{form.timeOfDay}}" bindchange="onTimeChange">
+          <view class="editor-input picker-input">{{form.timeOfDay}} <text>⌄</text></view>
+        </picker>
+      </view>
+      <view class="editor-field">
+        <view class="editor-label">重复频率</view>
+        <picker mode="selector" range="{{repeatOptions}}" range-key="label" value="{{form.repeatIndex}}" bindchange="onRepeatChange">
+          <view class="editor-input picker-input">{{repeatOptions[form.repeatIndex].label}} <text>⌄</text></view>
+        </picker>
+      </view>
+      <view class="editor-field">
+        <view class="editor-label">开始日期</view>
+        <picker mode="date" value="{{form.startDate}}" bindchange="onStartDateChange">
+          <view class="editor-input picker-input">{{form.startDate}} <text>⌄</text></view>
+        </picker>
+        <view class="field-hint">每周按该日期的星期重复，每月按该日期重复</view>
+      </view>
+      <view wx:if="{{editingId}}" class="enabled-row">
+        <view>
+          <view class="enabled-title">启用习惯</view>
+          <view class="enabled-hint">暂停后不再参与今日进度，历史仍保留</view>
+        </view>
+        <switch checked="{{form.enabled}}" color="#6f9785" bindchange="onEnabledChange" />
+      </view>
+      <view class="editor-actions">
+        <button class="editor-cancel" bindtap="closeEditor">取消</button>
+        <button class="editor-save" loading="{{saving}}" bindtap="saveRoutine">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{showCalendar}}" class="calendar-mask" bindtap="closeMonthCalendar" catchtouchmove="noop">
+    <view class="calendar-sheet" catchtap="noop">
+      <view class="editor-handle"></view>
+      <view class="calendar-heading">
+        <view>
+          <view class="calendar-title">{{calendarRoutineTitle}}</view>
+          <view class="calendar-subtitle">{{calendarTitle}} · 已打卡 {{calendarCompleted}} 天</view>
+        </view>
+        <view class="calendar-close" bindtap="closeMonthCalendar">×</view>
+      </view>
+      <view class="calendar-weekdays">
+        <view wx:for="{{calendarWeekdays}}" wx:key="*this">{{item}}</view>
+      </view>
+      <view class="calendar-grid">
+        <view wx:for="{{calendarDays}}" wx:key="key" class="calendar-cell {{item.blank ? 'blank' : ''}} {{item.scheduled ? 'scheduled' : 'rest'}} {{item.completed ? 'completed' : ''}} {{item.today ? 'today' : ''}} {{item.future ? 'future' : ''}}">
+          <text wx:if="{{!item.blank}}">{{item.dayText}}</text>
+          <text wx:if="{{item.completed}}" class="calendar-check">✓</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

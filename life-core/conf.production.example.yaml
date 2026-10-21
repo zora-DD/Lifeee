@@ -1,0 +1,92 @@
+# 生产配置模板。复制到服务器 /opt/lifeee/conf.yaml 后再填入真实值。
+# 不要将包含密钥的 conf.yaml 提交到代码仓库或发到聊天中。
+server:
+  host: 127.0.0.1:8084
+  shutdown_timeout: 10s
+
+log:
+  level: info
+  output_mode: console
+
+database:
+  mysql:
+    enabled: true
+    dsn: lifeee_app:CHANGE_ME@tcp(127.0.0.1:3333)/lifeee?charset=utf8mb4&parseTime=True&loc=Local
+    max_open_conns: 30
+    max_idle_conns: 10
+    conn_max_lifetime: 1h
+    conn_max_idle_time: 30m
+    slow_threshold: 200ms
+    log_level: warn
+  redis:
+    enabled: false
+    addr: 127.0.0.1:6379
+    password: ""
+    db: 0
+    pool_size: 10
+    dial_timeout: 5s
+    read_timeout: 3s
+    write_timeout: 3s
+
+auth:
+  enabled: true
+  jwt_secret: CHANGE_ME_WITH_A_RANDOM_SECRET_AT_LEAST_32_CHARACTERS
+  token_ttl: 4320h
+  bootstrap_first_user: false
+  required_paths:
+    - /v1/life-core/user/*
+    - /v1/life-core/task/*
+    - /v1/life-core/activity_log/*
+    - /v1/life-core/bill/*
+    - /v1/life-core/record/*
+    - /v1/life-core/report/*
+    - /v1/life-core/restaurant/*
+    - /v1/life-core/place/*
+    - /v1/life-core/memory/*
+    - /v1/life-core/favorite/*
+    - /v1/life-core/access/*
+    - /v1/life-core/admin/*
+    - /v1/life-core/media/upload
+
+wechat:
+  app_id: CHANGE_ME
+  app_secret: CHANGE_ME
+  mock_enabled: false
+
+voice:
+  enabled: false
+  max_audio_bytes: 2097152
+  rate_limit:
+    per_minute: 5
+    per_day: 50
+  tencent_asr:
+    secret_id: ""
+    secret_key: ""
+    region: ap-shanghai
+    engine_model_type: 16k_zh
+  minimax:
+    endpoint: https://api.minimaxi.com/anthropic/v1/messages
+    api_key: ""
+    model: MiniMax-M2.7
+    timeout: 45s
+
+media:
+  enabled: true
+  storage_path: /var/lib/lifeee/media
+  signing_secret: CHANGE_ME_WITH_A_DIFFERENT_RANDOM_SECRET_AT_LEAST_32_CHARACTERS
+  max_upload_bytes: 5242880
+  max_image_edge: 1200
+  jpeg_quality: 82
+  signed_url_ttl: 2h
+  upload_rate_limit:
+    per_minute: 10
+    per_day: 100
+
+scheduler:
+  enabled: false
+  timezone: Asia/Shanghai
+  daily_task_summary:
+    enabled: false
+    spec: "0 6 * * *"
+    timeout: 2m
+    run_on_start: false

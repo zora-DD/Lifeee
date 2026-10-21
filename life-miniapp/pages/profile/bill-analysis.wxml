@@ -1,0 +1,164 @@
+<view class="page analysis-page">
+  <view class="page-header analysis-header">
+    <view>
+      <view class="eyebrow">BILL ANALYSIS</view>
+      <view class="page-title">消费分析</view>
+      <view class="page-subtitle">看看钱花在了哪里，也看看这段时间的生活。</view>
+    </view>
+    <button class="quick-record" bindtap="openBillCenter">记一笔</button>
+  </view>
+
+  <view wx:if="{{activeDropdown}}" class="filter-dropdown-mask" bindtap="closeFilterDropdown"></view>
+  <view class="filter-row">
+    <view class="filter-picker filter-dropdown-wrap {{activeDropdown === 'year' ? 'active' : ''}}">
+      <view class="filter-control card {{activeDropdown === 'year' ? 'open' : ''}}" data-name="year" catchtap="toggleFilterDropdown">
+        <view class="filter-caption">年份</view>
+        <view class="filter-value">{{selectedYear}} 年 <view class="filter-arrow"></view></view>
+      </view>
+      <view wx:if="{{activeDropdown === 'year'}}" class="filter-dropdown" catchtap="noop">
+        <scroll-view class="filter-dropdown-list" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}">
+          <view wx:for="{{yearOptions}}" wx:key="value" class="filter-dropdown-item {{selectedYearIndex === index ? 'selected' : ''}}" data-index="{{index}}" catchtap="selectYear">{{item.label}}</view>
+        </scroll-view>
+      </view>
+    </view>
+    <view class="filter-picker filter-dropdown-wrap {{activeDropdown === 'month' ? 'active' : ''}}">
+      <view class="filter-control card {{activeDropdown === 'month' ? 'open' : ''}}" data-name="month" catchtap="toggleFilterDropdown">
+        <view class="filter-caption">月份</view>
+        <view class="filter-value">{{selectedMonthLabel}} <view class="filter-arrow"></view></view>
+      </view>
+      <view wx:if="{{activeDropdown === 'month'}}" class="filter-dropdown" catchtap="noop">
+        <scroll-view class="filter-dropdown-list" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}">
+          <view wx:for="{{monthOptions}}" wx:key="value" class="filter-dropdown-item {{selectedMonthIndex === index ? 'selected' : ''}}" data-index="{{index}}" catchtap="selectMonth">{{item.label}}</view>
+        </scroll-view>
+      </view>
+    </view>
+    <view class="filter-picker filter-dropdown-wrap {{activeDropdown === 'user' ? 'active' : ''}}">
+      <view class="filter-control card {{activeDropdown === 'user' ? 'open' : ''}}" data-name="user" catchtap="toggleFilterDropdown">
+        <view class="filter-caption">记账人</view>
+        <view class="filter-value">{{selectedUserLabel}} <view class="filter-arrow"></view></view>
+      </view>
+      <view wx:if="{{activeDropdown === 'user'}}" class="filter-dropdown" catchtap="noop">
+        <scroll-view class="filter-dropdown-list" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}">
+          <view wx:for="{{userOptions}}" wx:key="id" class="filter-dropdown-item {{selectedUserIndex === index ? 'selected' : ''}}" data-index="{{index}}" catchtap="selectUser">{{item.label}}</view>
+        </scroll-view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="page-loading">
+    <view class="loading-ring"></view>
+    <text>正在整理账单</text>
+  </view>
+
+  <view wx:elif="{{errorText}}" class="state-card card">
+    <view class="state-icon">!</view>
+    <view class="state-title">暂时没有加载出来</view>
+    <view class="state-text">{{errorText}}</view>
+    <button class="state-button" bindtap="retry">重新加载</button>
+  </view>
+
+  <block wx:else>
+    <view class="total-card card">
+      <view class="total-label">{{selectedUserLabel}} · {{periodLabel}}总支出</view>
+      <view class="total-amount"><text>¥</text>{{stats.expenseTotal}}</view>
+      <view class="total-meta">
+        <text>共 {{stats.billCount}} 笔</text>
+        <text>{{periodLabel}}收入 ¥{{stats.incomeTotal}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{hasData && donutItems.length}}" class="analysis-card donut-card card">
+      <view class="section-heading donut-heading">
+        <view class="section-title">支出构成</view>
+        <view class="section-note">{{periodLabel}}</view>
+      </view>
+      <view class="donut-content">
+        <view class="donut-visual" style="background: {{donutGradient}};">
+          <view class="donut-center"><text>支出</text><text>100%</text></view>
+        </view>
+        <view class="donut-legend">
+          <view wx:for="{{donutItems}}" wx:key="category" class="donut-legend-row" data-category="{{item.category}}" bindtap="openCategoryDetails">
+            <view class="donut-color" style="background: {{item.color}};"></view>
+            <text class="donut-category"><text class="category-emoji">{{item.categoryIcon}}</text>{{item.category}}</text>
+            <text class="donut-percent">{{item.percentText}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{hasData && insights.length}}" class="analysis-card advice-card card">
+      <view class="section-heading">
+        <view class="section-title">消费建议</view>
+        <view class="section-note">基于已记录账单</view>
+      </view>
+      <view wx:for="{{insights}}" wx:key="title" class="advice-row {{item.type}}">
+        <view class="advice-marker"></view>
+        <view class="advice-content">
+          <view class="advice-title">{{item.title}}</view>
+          <view class="advice-text">{{item.text}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{hasData && !selectedUserId}}" class="analysis-card card">
+      <view class="section-heading">
+        <view class="section-title">不同用户支出</view>
+        <view class="section-note">公开账单汇总</view>
+      </view>
+      <view wx:if="{{users.length}}" class="user-list">
+        <view wx:for="{{users}}" wx:key="id" class="user-row">
+          <view class="user-avatar" style="background: {{item.user.avatarColor || '#72b290'}};">{{item.user.avatarEmoji || '记'}}</view>
+          <view class="user-main">
+            <view class="user-name">{{item.user.nickname || '未命名用户'}}</view>
+            <view class="user-count">共 {{item.count}} 笔</view>
+          </view>
+          <view class="user-amount">¥{{item.expenseText}}</view>
+        </view>
+      </view>
+      <view wx:else class="section-empty">暂无用户支出数据</view>
+    </view>
+
+    <view wx:if="{{hasData && scope === 'year'}}" class="analysis-card card">
+      <view class="section-heading">
+        <view class="section-title">每月支出对比</view>
+        <view class="section-note">单位：元</view>
+      </view>
+      <scroll-view class="month-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+        <view class="month-chart">
+          <view wx:for="{{monthly}}" wx:key="month" class="month-column">
+            <view class="month-value">{{item.showAmount ? '¥' + item.expenseText : ''}}</view>
+            <view class="month-track">
+              <view class="month-fill" style="height: {{item.barPercent}}%;"></view>
+            </view>
+            <view class="month-label">{{item.month}}月</view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <view wx:if="{{hasData}}" class="analysis-card category-card card">
+      <view class="section-heading">
+        <view class="section-title">分类明细</view>
+        <view class="section-note">点击查看账单</view>
+      </view>
+      <view wx:for="{{categories}}" wx:key="category" class="category-row" data-category="{{item.category}}" bindtap="openCategoryDetails" hover-class="category-row-hover">
+        <view class="category-copy">
+          <view class="category-name"><text class="category-emoji">{{item.categoryIcon}}</text>{{item.category}}</view>
+          <view class="category-count">{{item.count}} 笔</view>
+        </view>
+        <view class="category-track">
+          <view class="category-fill" style="width: {{item.percent}}%;"></view>
+        </view>
+        <view class="category-amount">¥{{item.amountText}}</view>
+        <view class="category-arrow">›</view>
+      </view>
+    </view>
+
+    <view wx:else class="state-card card">
+      <view class="state-icon money-icon">¥</view>
+      <view class="state-title">{{periodLabel}}还没有账单</view>
+      <view class="state-text">记下第一笔消费后，这里会自动生成分析。</view>
+      <button class="state-button" bindtap="openBillCenter">去记一笔</button>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,291 @@
+<view class="page tab-page">
+  <block wx:if="{{authChecked && loggedIn}}">
+  <view class="page-header">
+    <view class="eyebrow">TASKS</view>
+    <view class="task-heading-row">
+      <view class="page-title">任务清单</view>
+      <view class="task-heading-actions">
+        <view class="task-tool-entry" bindtap="openCalendar" hover-class="tap-feedback">
+          <text class="task-tool-icon">▦</text>
+          <text>任务日历</text>
+        </view>
+        <view wx:if="{{canWrite}}" class="task-tool-entry routine" bindtap="openDailyRoutines" hover-class="tap-feedback">
+          <text class="task-tool-icon">✓</text>
+          <text>习惯打卡</text>
+        </view>
+      </view>
+    </view>
+    <view class="page-subtitle">今日事，今日毕。先完成最重要的一件事。</view>
+  </view>
+
+  <view class="stats-card card">
+    <view class="stat-item">
+      <view class="stat-value total">{{totalCount}}</view>
+      <view class="stat-label">总任务</view>
+    </view>
+    <view class="stat-item">
+      <view class="stat-value active">{{todoCount}}</view>
+      <view class="stat-label">待处理</view>
+    </view>
+    <view class="stat-item">
+      <view class="stat-value completed">{{doneCount}}</view>
+      <view class="stat-label">已完成</view>
+    </view>
+    <view class="stat-item">
+      <view class="stat-value rate">{{completionRate}}%</view>
+      <view class="stat-label">完成率</view>
+    </view>
+  </view>
+
+  <view class="ai-entry card" bindtap="openAISummary" hover-class="tap-feedback">
+    <view class="ai-entry-icon">✦</view>
+    <view class="ai-entry-copy">
+      <view class="ai-entry-title">AI 帮我梳理</view>
+      <view class="ai-entry-text">看看逾期、今日截止和接下来要处理的事</view>
+    </view>
+    <view class="ai-entry-arrow">›</view>
+  </view>
+
+  <view class="filter-card card">
+    <view class="search-row">
+      <view class="search-icon">⌕</view>
+      <input
+        class="search-input"
+        value="{{keyword}}"
+        placeholder="搜索标题、描述或标签"
+        confirm-type="search"
+        bindinput="onKeywordInput"
+        bindconfirm="search"
+      />
+      <view class="search-action" bindtap="search" hover-class="tap-feedback">搜索</view>
+    </view>
+
+    <view class="filter-group">
+      <view class="filter-label">状态</view>
+      <scroll-view class="filter-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+        <view class="filter-row">
+          <view
+            wx:for="{{statusFilters}}"
+            wx:key="value"
+            class="filter-chip {{statusFilter === item.value ? 'active' : ''}}"
+            data-value="{{item.value}}"
+            bindtap="selectStatus"
+            hover-class="tap-feedback"
+          >{{item.label}}</view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <view class="filter-group owner-group">
+      <view class="filter-label">范围</view>
+      <view class="filter-row">
+        <view
+          wx:for="{{ownerFilters}}"
+          wx:key="value"
+          class="filter-chip owner-chip {{ownerFilter === item.value ? 'active' : ''}}"
+          data-value="{{item.value}}"
+          bindtap="selectOwner"
+          hover-class="tap-feedback"
+        >{{item.label}}</view>
+      </view>
+    </view>
+
+    <view class="filter-group priority-group">
+      <view class="filter-label">优先级</view>
+      <scroll-view class="filter-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+        <view class="filter-row">
+          <view
+            wx:for="{{priorityFilters}}"
+            wx:key="value"
+            class="priority-chip priority-{{item.value}} {{priorityFilter === item.value ? 'active' : ''}}"
+            data-value="{{item.value}}"
+            bindtap="selectPriority"
+            hover-class="tap-feedback"
+          >{{item.label}}</view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <view class="section-label">
+    <text>任务列表</text>
+    <text class="section-hint">{{canWrite ? '自己创建的任务可左滑删除 · 点击详情' : '只读模式 · 点击详情'}}</text>
+  </view>
+
+  <view wx:if="{{loadingTasks}}" class="empty-card card">
+    <view class="empty-icon">···</view>
+    <view class="empty-title">正在加载任务</view>
+    <view class="empty-text">正在连接生活清单服务。</view>
+  </view>
+
+  <view wx:elif="{{loadError}}" class="empty-card card">
+    <view class="empty-icon">!</view>
+    <view class="empty-title">暂时无法加载</view>
+    <view class="empty-text">{{loadError}}</view>
+    <view class="retry-action" bindtap="retryLoad" hover-class="tap-feedback">重新加载</view>
+  </view>
+
+  <view wx:elif="{{tasks.length === 0}}" class="empty-card card">
+    <view class="empty-icon">✓</view>
+    <view class="empty-title">没有匹配的任务</view>
+    <view class="empty-text">换个筛选条件，或创建一项新任务。</view>
+  </view>
+
+  <block wx:for="{{tasks}}" wx:key="id">
+    <view
+      wx:if="{{item.firstCompleted && statusFilter !== 'done'}}"
+      class="completed-fold"
+      bindtap="toggleCompleted"
+      hover-class="tap-feedback"
+    >
+      <view class="completed-fold-main">
+        <text class="completed-fold-icon">✓</text>
+        <text>已完成 {{statusFilter === 'all' ? doneCount : completedCountInList}} 项</text>
+      </view>
+      <text class="completed-fold-action">{{completedExpanded ? '收起 ⌃' : '展开 ⌄'}}</text>
+    </view>
+
+    <view
+      wx:if="{{item.status !== 'done' || completedExpanded || statusFilter === 'done'}}"
+      class="task-swipe {{openedTaskId === item.id || revealingTaskId === item.id ? 'revealing' : ''}}"
+      data-id="{{item.id}}"
+      data-index="{{index}}"
+      bindtouchstart="onTaskTouchStart"
+      bindtouchmove="onTaskTouchMove"
+      bindtouchend="onTaskTouchEnd"
+      bindtouchcancel="onTaskTouchEnd"
+    >
+    <view wx:if="{{canWrite && item.canEdit}}" class="swipe-delete" data-id="{{item.id}}" catchtap="deleteTask">
+      <text class="delete-icon">×</text>
+      <text>删除</text>
+    </view>
+
+    <view
+      class="task-card card priority-{{item.priority}} {{item.status === 'done' ? 'completed' : ''}} {{swipingTaskId === item.id ? 'dragging' : ''}}"
+      style="transform: translateX({{item.swipeOffset}}px);"
+      data-id="{{item.id}}"
+      bindtap="openDetail"
+      hover-class="tap-feedback"
+    >
+      <view class="check-area {{canWrite && item.canEdit ? '' : 'readonly'}}" data-id="{{item.id}}" data-status="{{item.status}}" catchtap="toggleTask">
+        <view class="checkbox {{item.status === 'done' ? 'checked' : ''}}">
+          {{item.status === 'done' ? '✓' : ''}}
+        </view>
+      </view>
+
+      <view class="task-main">
+        <view class="task-title">{{item.title}}</view>
+        <view class="task-meta">
+          <view class="priority-label">{{item.priorityText}}</view>
+          <view wx:for="{{item.tagViews}}" wx:key="label" class="task-tag">
+            <text class="task-tag-icon">{{item.icon}}</text>
+            <text>{{item.label}}</text>
+          </view>
+        </view>
+        <view class="due {{item.overdue ? 'overdue' : ''}}">
+          <text class="due-icon">◷</text>
+          <text wx:if="{{item.overdue}}" class="due-state">已逾期</text>
+          <text wx:else class="due-state">截止</text>
+          <text class="due-date">{{item.dueText}}</text>
+          <view
+            wx:if="{{item.overdue && item.canEdit}}"
+            class="postpone-action {{postponingTaskId === item.id ? 'disabled' : ''}}"
+            data-id="{{item.id}}"
+            catchtap="quickPostpone"
+          >{{postponingTaskId === item.id ? '处理中' : '延期'}}</view>
+        </view>
+      </view>
+
+      <view class="task-arrow">›</view>
+
+      <view wx:if="{{completingTaskId === item.id}}" class="complete-feedback">
+        <view class="complete-feedback-icon">✓</view>
+        <text>已完成</text>
+      </view>
+    </view>
+    </view>
+  </block>
+
+  <view wx:if="{{tasks.length > 0}}" class="list-footer">
+    <text wx:if="{{loadingMore}}">正在加载更多…</text>
+    <text wx:elif="{{hasMore}}">继续上滑加载更多</text>
+    <text wx:else>已经到底了</text>
+  </view>
+
+  <view wx:if="{{canWrite}}" class="create-button" bindtap="createTask" hover-class="tap-feedback">
+    <text class="create-plus">＋</text>
+    <text>新建任务</text>
+  </view>
+  </block>
+
+  <view wx:elif="{{authChecked}}" class="login-required card">
+    <view class="login-required-icon">⌁</view>
+    <view class="login-required-title">登录后查看任务</view>
+    <view class="login-required-text">你的任务内容仅在登录后展示。</view>
+    <navigator class="login-required-button" url="/pages/index/index" open-type="switchTab">前往登录</navigator>
+  </view>
+  <view wx:else class="page-loading">
+    <view class="loading-ring"></view>
+    <text>正在检查登录状态</text>
+  </view>
+
+  <view wx:if="{{aiSummaryVisible}}" class="ai-summary-mask" bindtap="closeAISummary" catchtouchmove="noop">
+    <view class="ai-summary-sheet" catchtap="noop">
+      <view class="ai-sheet-handle"></view>
+      <view class="ai-sheet-heading">
+        <view>
+          <view class="ai-sheet-kicker">DAILY BRIEF</view>
+          <view class="ai-sheet-title">今天怎么安排</view>
+        </view>
+        <view class="ai-sheet-close" bindtap="closeAISummary">×</view>
+      </view>
+
+      <view wx:if="{{aiSummaryLoading}}" class="ai-sheet-loading">
+        <view class="loading-ring"></view>
+        <view>AI 正在梳理今天的任务…</view>
+      </view>
+
+      <view wx:elif="{{aiSummaryError}}" class="ai-sheet-error">
+        <view>{{aiSummaryError}}</view>
+        <view class="ai-retry" bindtap="refreshAISummary">重新生成</view>
+      </view>
+
+      <scroll-view wx:elif="{{aiSummary}}" class="ai-sheet-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+        <view class="ai-summary-copy">{{aiSummary.summary}}</view>
+        <view class="ai-summary-counts">
+          <view class="ai-count overdue"><text>{{aiSummary.overdueCount}}</text><text>已逾期</text></view>
+          <view class="ai-count today"><text>{{aiSummary.dueTodayCount}}</text><text>今天截止</text></view>
+          <view class="ai-count upcoming"><text>{{aiSummary.upcomingCount}}</text><text>未来 3 天</text></view>
+        </view>
+
+        <view wx:if="{{aiSummary.focusTasks.length}}" class="ai-block">
+          <view class="ai-block-title">优先看看</view>
+          <view wx:for="{{aiSummary.focusTasks}}" wx:key="id" class="ai-focus-item" data-id="{{item.id}}" bindtap="openSummaryTask">
+            <view class="ai-focus-mark priority-{{item.priority}}"></view>
+            <view class="ai-focus-main">
+              <view class="ai-focus-title">{{item.title}}</view>
+              <view class="ai-focus-meta">{{item.metaText}}</view>
+              <view wx:if="{{canWrite}}" class="ai-focus-actions">
+                <view class="ai-focus-action complete {{aiActionTaskId === item.id ? 'disabled' : ''}}" data-id="{{item.id}}" catchtap="completeSummaryTask">{{aiActionTaskId === item.id ? '处理中…' : '✓ 完成'}}</view>
+                <view class="ai-focus-action postpone {{aiActionTaskId === item.id ? 'disabled' : ''}}" data-id="{{item.id}}" catchtap="postponeSummaryTask">延期到明天</view>
+              </view>
+            </view>
+            <view class="ai-focus-arrow">›</view>
+          </view>
+        </view>
+
+        <view wx:if="{{aiSummary.suggestions.length}}" class="ai-block suggestion-block">
+          <view class="ai-block-title">行动建议</view>
+          <view wx:for="{{aiSummary.suggestions}}" wx:key="*this" class="ai-suggestion">
+            <text>{{index + 1}}</text><view>{{item}}</view>
+          </view>
+        </view>
+
+        <view class="ai-sheet-footer">
+          <text>{{aiSummary.cached ? '今日缓存结果' : (aiSummary.aiGenerated ? 'AI 已结合当前任务生成' : '基础规则梳理')}}</text>
+          <view class="ai-refresh" bindtap="refreshAISummary">重新生成</view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

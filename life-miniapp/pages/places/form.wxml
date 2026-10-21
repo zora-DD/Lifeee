@@ -1,0 +1,122 @@
+<view class="page form-page">
+  <view class="page-header">
+    <view class="eyebrow">PLACE MEMORY</view>
+    <view class="page-title">{{id ? '编辑地点' : '新建地点'}}</view>
+    <view class="page-subtitle">记录特色与感受，给下一次出发留个线索。</view>
+  </view>
+
+  <view class="cover-card card" bindtap="chooseCover" hover-class="tap-feedback">
+    <image wx:if="{{form.coverUrl}}" class="cover-image" src="{{form.coverUrl}}" mode="aspectFill"></image>
+    <view wx:else class="cover-empty">
+      <view class="cover-icon">{{form.icon}}</view>
+      <view>
+        <view class="cover-title">添加地点照片</view>
+        <view class="cover-hint">支持从相册选择或直接拍摄</view>
+      </view>
+    </view>
+    <view wx:if="{{form.coverUrl}}" class="cover-actions">
+      <text>点击更换</text>
+      <text class="remove-cover" catchtap="removeCover">移除</text>
+    </view>
+  </view>
+
+  <view class="form-card card">
+    <view class="form-section-title">基本信息</view>
+    <view class="form-group">
+      <view class="form-label">地点名称 <text class="required">*</text></view>
+      <input class="form-input" value="{{form.name}}" placeholder="例如：山顶观景台" data-field="name" bindinput="onInput" />
+    </view>
+    <view class="form-group last-group">
+      <view class="form-label">地点分类</view>
+      <picker mode="selector" range="{{categories}}" range-key="label" value="{{categoryIndex}}" bindchange="onCategoryChange">
+        <view class="picker-field">{{form.icon}} {{form.category}} <text>⌄</text></view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="form-card card">
+    <view class="form-section-title">到访状态</view>
+    <view class="visit-selector">
+      <view class="visit-option {{!form.visited ? 'active wishlist' : ''}}" data-value="wishlist" bindtap="selectVisitStatus" hover-class="tap-feedback">
+        <text class="visit-option-icon">＋</text>
+        <view>
+          <view class="visit-option-title">还没去过</view>
+          <view class="visit-option-note">先加入想去</view>
+        </view>
+      </view>
+      <view class="visit-option {{form.visited ? 'active visited' : ''}}" data-value="visited" bindtap="selectVisitStatus" hover-class="tap-feedback">
+        <text class="visit-option-icon">✓</text>
+        <view>
+          <view class="visit-option-title">已经去过</view>
+          <view class="visit-option-note">记录到访信息</view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{form.visited}}" class="visit-fields">
+      <view class="form-group half">
+        <view class="form-label">上次时间</view>
+        <picker mode="date" value="{{form.lastVisitedAt}}" bindchange="onVisitDateChange">
+          <view class="picker-field">{{form.lastVisitedAt}} <text>⌄</text></view>
+        </picker>
+      </view>
+      <view class="form-group half">
+        <view class="form-label">去过次数</view>
+        <input class="form-input" type="number" value="{{form.visitCount}}" placeholder="1" data-field="visitCount" bindinput="onInput" />
+      </view>
+    </view>
+  </view>
+
+  <view class="form-card card">
+    <view class="form-section-title">地点记录</view>
+    <view class="form-group">
+      <view class="form-label">地点特色 <text class="required">*</text></view>
+      <textarea class="form-textarea" value="{{form.feature}}" placeholder="风景、玩法、氛围，最值得记住的是什么？" data-field="feature" bindinput="onInput"></textarea>
+    </view>
+    <view class="form-group last-group">
+      <view class="form-label">备注</view>
+      <textarea class="form-textarea short" value="{{form.note}}" placeholder="路线、停车、装备或其他提醒" data-field="note" bindinput="onInput"></textarea>
+    </view>
+  </view>
+
+  <view class="form-card card">
+    <view class="form-section-title">位置信息</view>
+    <view class="form-group">
+      <view class="form-label">地点</view>
+      <input class="form-input" value="{{form.address}}" placeholder="地址、入口或集合位置" data-field="address" bindinput="onInput" />
+    </view>
+    <view class="form-group last-group">
+      <view class="form-label">适合时间</view>
+      <input class="form-input" value="{{form.bestTime}}" placeholder="例如：日落前一小时" data-field="bestTime" bindinput="onInput" />
+    </view>
+    <view class="location-hint">填写大致位置，方便以后再找回来。</view>
+  </view>
+
+  <view class="form-card card">
+    <view class="form-section-title">出行参考</view>
+    <view class="travel-fields">
+      <view class="form-group half">
+        <view class="form-label">距上海（公里）</view>
+        <input class="form-input" type="digit" value="{{form.distanceKm}}" placeholder="例如：320" data-field="distanceKm" bindinput="onInput" />
+      </view>
+      <view class="form-group half">
+        <view class="form-label">自驾（小时）</view>
+        <input class="form-input" type="digit" value="{{form.driveDurationHours}}" placeholder="例如：4.5" data-field="driveDurationHours" bindinput="onInput" />
+      </view>
+    </view>
+    <view class="location-hint">目前统一以上海为起点，后续可接入地图自动计算。</view>
+  </view>
+
+  <view class="form-card card">
+    <view class="form-section-title">参考攻略</view>
+    <view class="form-group last-group">
+      <view class="form-label">微信公众号文章</view>
+      <input class="form-input" value="{{form.guideUrl}}" placeholder="粘贴 mp.weixin.qq.com 文章链接" data-field="guideUrl" bindinput="onInput" />
+    </view>
+    <view class="location-hint">保存后可从地点详情直接打开原文，目前仅支持微信公众号文章。</view>
+  </view>
+
+  <button class="save-button" loading="{{saving}}" bindtap="savePlace">
+    {{saving ? '保存中...' : '保存地点'}}
+  </button>
+</view>

@@ -1,0 +1,65 @@
+<view class="page review-page">
+  <view class="page-header">
+    <view class="eyebrow">ACCESS</view>
+    <view class="page-title">用户与权限</view>
+    <view class="page-subtitle">审批申请，并按用户配置每个模块的访问范围。</view>
+  </view>
+
+  <scroll-view class="status-tabs" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="status-tabs-inner">
+      <view
+        wx:for="{{filters}}"
+        wx:key="value"
+        class="status-tab {{activeStatus === item.value ? 'active' : ''}}"
+        data-status="{{item.value}}"
+        bindtap="selectStatus"
+      >{{item.label}}</view>
+    </view>
+  </scroll-view>
+
+  <view wx:if="{{loading}}" class="page-loading">
+    <view class="loading-ring"></view>
+    <text>正在读取申请</text>
+  </view>
+
+  <view wx:elif="{{!items.length}}" class="empty-card card">
+    <view class="empty-icon">✓</view>
+    <view class="empty-title">这里暂时没有申请</view>
+    <view class="empty-text">新的使用申请会出现在这里。</view>
+  </view>
+
+  <view wx:else class="request-list">
+    <view wx:for="{{items}}" wx:key="id" class="request-card card">
+      <view class="request-main">
+        <image wx:if="{{item.avatarUrl}}" class="request-avatar" src="{{item.avatarUrl}}" mode="aspectFill"></image>
+        <view wx:else class="request-avatar" style="background: {{item.avatarColor}};">{{item.avatarEmoji}}</view>
+        <view class="request-content">
+          <view class="request-name">{{item.nickname}}</view>
+          <view class="request-time">申请于 {{item.appliedAtText}}</view>
+        </view>
+        <view class="request-status {{item.accessStatus}}">{{item.statusText}}</view>
+      </view>
+      <view class="request-note {{item.applicationNote?'':'empty'}}"><text class="request-note-label">身份备注</text>{{item.applicationNote || '未填写身份备注'}}</view>
+      <view class="request-signature">{{item.signature}}</view>
+
+      <view class="request-actions">
+        <button
+          wx:if="{{item.accessStatus !== 'rejected'}}"
+          class="action-button reject"
+          disabled="{{reviewingId === item.id}}"
+          loading="{{reviewingId === item.id && reviewingStatus === 'rejected'}}"
+          data-id="{{item.id}}"
+          data-nickname="{{item.nickname}}"
+          data-status="rejected"
+          bindtap="review"
+        >拒绝</button>
+        <button
+          class="action-button permission"
+          data-user-id="{{item.id}}"
+          data-approve="{{item.accessStatus !== 'approved'}}"
+          bindtap="openPermissionEditor"
+        >{{item.accessStatus === 'approved' ? '配置权限' : '配置并通过'}}</button>
+      </view>
+    </view>
+  </view>
+</view>

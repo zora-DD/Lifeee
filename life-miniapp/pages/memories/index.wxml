@@ -1,0 +1,72 @@
+<view class="memory-page">
+  <view wx:if="{{loading}}" class="page-loading">
+    <view class="loading-ring"></view>
+    正在打开时光相册
+  </view>
+
+  <block wx:else>
+    <view class="memory-hero">
+      <view class="hero-orb hero-orb-one"></view>
+      <view class="hero-orb hero-orb-two"></view>
+      <view class="memory-eyebrow">OUR LITTLE MOMENTS</view>
+      <view class="memory-title">莓好时光</view>
+      <view class="memory-subtitle">照片会褪色，但一起走过的日子不会。</view>
+      <view class="memory-count">已收藏 {{total}} 段时光</view>
+    </view>
+
+    <scroll-view class="year-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="year-list">
+        <view
+          wx:for="{{years}}"
+          wx:key="*this"
+          class="year-chip {{selectedYear === item ? 'active' : ''}}"
+          data-year="{{item}}"
+          bindtap="selectYear"
+        >{{item === '全部' ? '全部时光' : item + '年'}}</view>
+      </view>
+    </scroll-view>
+
+    <view class="timeline">
+      <view wx:for="{{memories}}" wx:key="id" wx:for-item="memory" class="memory-item">
+        <view class="timeline-rail">
+          <view class="timeline-dot"></view>
+          <view class="timeline-line"></view>
+        </view>
+
+        <view class="memory-content">
+          <view class="memory-meta">
+            <text class="memory-date">{{memory.dateLabel}}</text>
+            <text class="memory-place">{{memory.place}}</text>
+          </view>
+          <view class="memory-card {{memory.images.length > 1 ? 'multi' : ''}}">
+            <view class="memory-images image-count-{{memory.images.length}}">
+              <image
+                wx:for="{{memory.images}}"
+                wx:key="src"
+                wx:for-item="photo"
+                class="memory-image image-{{index}}"
+                src="{{photo.src || photo.sourceUrl}}"
+                mode="{{memory.images.length === 1 ? 'widthFix' : 'aspectFill'}}"
+                lazy-load
+                data-id="{{memory.id}}"
+                data-src="{{photo.src || photo.sourceUrl}}"
+                bindtap="previewImage"
+              ></image>
+            </view>
+            <view class="memory-copy">
+              <view class="memory-card-title">{{memory.title}}</view>
+              <view class="memory-description">{{memory.description}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{loadingMore}}" class="load-more">正在加载更多时光...</view>
+    <view wx:elif="{{!memories.length}}" class="memory-empty">这个年份还没有照片</view>
+    <button class="add-memory-button" bindtap="addMemory">
+      <text class="add-icon">＋</text>
+      <text>添加时光</text>
+    </button>
+  </block>
+</view>

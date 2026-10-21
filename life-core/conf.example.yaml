@@ -1,0 +1,99 @@
+server:
+  host: 0.0.0.0:8081
+  shutdown_timeout: 10s
+
+log:
+  level: debug
+  output_mode: console
+  file: app.log
+  max_size: 100
+  max_backups: 3
+  max_age: 30
+  compress: false
+
+database:
+  mysql:
+    enabled: true
+    dsn: root:change-me@tcp(127.0.0.1:3306)/lifeee?charset=utf8mb4&parseTime=True&loc=Local
+    max_open_conns: 50
+    max_idle_conns: 10
+    conn_max_lifetime: 1h
+    conn_max_idle_time: 30m
+    slow_threshold: 200ms
+    log_level: warn
+  redis:
+    enabled: false
+    addr: 127.0.0.1:6379
+    password: ""
+    db: 0
+    pool_size: 10
+    dial_timeout: 5s
+    read_timeout: 3s
+    write_timeout: 3s
+
+auth:
+  enabled: true
+  jwt_secret: replace-with-a-random-secret-at-least-32-characters
+  token_ttl: 4320h
+  bootstrap_first_user: true
+  required_paths:
+    - /v1/life-core/user/*
+    - /v1/life-core/task/*
+    - /v1/life-core/activity_log/*
+    - /v1/life-core/bill/*
+    - /v1/life-core/record/*
+    - /v1/life-core/report/*
+    - /v1/life-core/restaurant/*
+    - /v1/life-core/place/*
+    - /v1/life-core/memory/*
+    - /v1/life-core/favorite/*
+    - /v1/life-core/access/*
+    - /v1/life-core/admin/*
+    - /v1/life-core/media/upload
+
+wechat:
+  app_id: replace-with-your-miniprogram-app-id
+  app_secret: ""
+  mock_enabled: true
+  mock_open_id: local-owner-openid
+
+# 语音 Demo 默认关闭。密钥只填写在服务器 conf.yaml，不要提交到仓库。
+voice:
+  enabled: false
+  max_audio_bytes: 2097152
+  rate_limit:
+    per_minute: 5
+    per_day: 50
+  tencent_asr:
+    secret_id: ""
+    secret_key: ""
+    region: ap-guangzhou
+    engine_model_type: 16k_zh
+  minimax:
+    endpoint: https://api.minimaxi.com/anthropic/v1/messages
+    api_key: ""
+    model: MiniMax-M2.7
+    timeout: 45s
+
+# 图片存储默认复用 auth.jwt_secret 签名；正式环境可单独设置 signing_secret。
+media:
+  enabled: false
+  storage_path: data/media
+  signing_secret: ""
+  max_upload_bytes: 5242880
+  max_image_edge: 1200
+  jpeg_quality: 82
+  signed_url_ttl: 2h
+  upload_rate_limit:
+    per_minute: 10
+    per_day: 100
+
+# 进程内定时任务默认关闭；启用后不依赖 Linux cron，可跨平台运行。
+scheduler:
+  enabled: false
+  timezone: Asia/Shanghai
+  daily_task_summary:
+    enabled: true
+    spec: "0 6 * * *"
+    timeout: 2m
+    run_on_start: true

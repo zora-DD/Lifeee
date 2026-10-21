@@ -1,0 +1,393 @@
+.report-page {
+  padding-bottom: 70rpx;
+}
+
+.range-switch {
+  display: flex;
+  margin-bottom: 20rpx;
+  padding: 8rpx;
+  background: #eaf0ed;
+  border-radius: 22rpx;
+}
+
+.range-item {
+  flex: 1;
+  padding: 15rpx 0;
+  color: #6c7872;
+  font-size: 24rpx;
+  text-align: center;
+  border-radius: 16rpx;
+}
+
+.range-item.active {
+  color: #456f5d;
+  font-weight: 700;
+  background: #ffffff;
+  box-shadow: 0 5rpx 14rpx rgba(48, 65, 57, 0.08);
+}
+
+.period-picker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22rpx;
+  padding: 20rpx 24rpx;
+  color: #405149;
+  font-size: 26rpx;
+  font-weight: 650;
+}
+
+.picker-arrow {
+  color: #87938d;
+  font-size: 28rpx;
+}
+
+.summary-card {
+  padding: 30rpx;
+  background: linear-gradient(145deg, #eaf3ee, #ffffff);
+}
+
+.summary-kicker {
+  color: #5d7e6e;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.summary-text {
+  margin-top: 10rpx;
+  color: #34423b;
+  font-size: 29rpx;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.summary-note {
+  margin-top: 12rpx;
+  color: #829089;
+  font-size: 21rpx;
+}
+
+.ai-report-card {
+  margin-top: 20rpx;
+  padding: 28rpx;
+  background: linear-gradient(145deg, #edf6f1, #fffaf3);
+}
+
+.ai-report-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ai-report-title {
+  color: #40554b;
+  font-size: 27rpx;
+  font-weight: 700;
+}
+
+.ai-report-title text {
+  margin-right: 8rpx;
+  color: #719683;
+}
+
+.ai-report-refresh {
+  color: #678172;
+  font-size: 21rpx;
+}
+
+.ai-report-loading {
+  display: flex;
+  min-height: 180rpx;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #7b8981;
+  font-size: 22rpx;
+}
+
+.ai-report-loading .loading-ring {
+  margin-bottom: 18rpx;
+}
+
+.ai-report-summary {
+  margin-top: 20rpx;
+  color: #3f5047;
+  font-size: 26rpx;
+  line-height: 1.65;
+}
+
+.ai-report-section {
+  margin-top: 22rpx;
+  padding-top: 19rpx;
+  border-top: 1rpx solid rgba(111, 139, 125, 0.16);
+}
+
+.ai-report-label {
+  margin-bottom: 12rpx;
+  color: #718078;
+  font-size: 20rpx;
+  font-weight: 650;
+}
+
+.ai-report-line {
+  display: flex;
+  color: #56655d;
+  font-size: 23rpx;
+  line-height: 1.55;
+}
+
+.ai-report-line + .ai-report-line {
+  margin-top: 10rpx;
+}
+
+.ai-report-line text {
+  display: flex;
+  width: 32rpx;
+  height: 32rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  margin-right: 11rpx;
+  color: #648773;
+  font-size: 18rpx;
+  background: rgba(219, 235, 226, 0.9);
+  border-radius: 50%;
+}
+
+.ai-report-line.suggestion text {
+  color: #8a724f;
+  background: #f4eadd;
+}
+
+.ai-report-source {
+  margin-top: 20rpx;
+  color: #929c97;
+  font-size: 19rpx;
+}
+
+.ai-report-empty {
+  margin-top: 18rpx;
+  color: #76837c;
+  font-size: 22rpx;
+  line-height: 1.55;
+}
+
+.ai-report-button {
+  display: inline-flex;
+  height: 62rpx;
+  align-items: center;
+  justify-content: center;
+  margin-top: 18rpx;
+  padding: 0 25rpx;
+  color: #ffffff;
+  font-weight: 650;
+  background: #6f9784;
+  border-radius: 19rpx;
+}
+
+.stats-card {
+  display: flex;
+  margin-top: 20rpx;
+  padding: 27rpx 8rpx;
+}
+
+.stat-item {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+
+.stat-item + .stat-item::before {
+  position: absolute;
+  top: 5rpx;
+  bottom: 5rpx;
+  left: 0;
+  width: 1rpx;
+  background: #e3e9e6;
+  content: '';
+}
+
+.stat-value {
+  overflow: hidden;
+  color: #53635b;
+  font-size: 32rpx;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stat-value.duration { color: #a0774f; }
+.stat-value.days { color: #648d7a; }
+
+.stat-label {
+  margin-top: 6rpx;
+  color: #7f8984;
+  font-size: 22rpx;
+}
+
+.detail-card {
+  margin-top: 20rpx;
+  padding: 8rpx 26rpx;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 21rpx 0;
+  color: #66736d;
+  font-size: 24rpx;
+}
+
+.detail-item + .detail-item {
+  border-top: 1rpx solid #edf0ee;
+}
+
+.detail-item text:last-child {
+  color: #3f5249;
+  font-weight: 650;
+}
+
+.trend-card {
+  margin-top: 20rpx;
+  padding: 28rpx 26rpx 30rpx;
+}
+
+.trend-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.trend-title {
+  color: #35433c;
+  font-size: 28rpx;
+  font-weight: 700;
+}
+
+.trend-note {
+  color: #8a948f;
+  font-size: 21rpx;
+}
+
+.day-bar-row {
+  display: flex;
+  min-height: 48rpx;
+  align-items: center;
+}
+
+.day-bar-row + .day-bar-row {
+  margin-top: 13rpx;
+}
+
+.day-label {
+  width: 70rpx;
+  color: #6e7a74;
+  font-size: 21rpx;
+}
+
+.day-track {
+  height: 14rpx;
+  flex: 1;
+  overflow: hidden;
+  background: #edf1ef;
+  border-radius: 8rpx;
+}
+
+.day-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #82aa97, #b4cdbf);
+  border-radius: 8rpx;
+}
+
+.day-value {
+  width: 155rpx;
+  margin-left: 14rpx;
+  overflow: hidden;
+  color: #617068;
+  font-size: 20rpx;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.year-bars {
+  display: flex;
+  height: 280rpx;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.month-column {
+  display: flex;
+  height: 100%;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.month-value {
+  min-height: 28rpx;
+  color: #668073;
+  font-size: 18rpx;
+}
+
+.month-track {
+  position: relative;
+  width: 20rpx;
+  height: 190rpx;
+  margin-top: 7rpx;
+  overflow: hidden;
+  background: #edf1ef;
+  border-radius: 11rpx;
+}
+
+.month-fill {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(180deg, #81a996, #b9d0c4);
+  border-radius: 11rpx;
+}
+
+.month-label {
+  margin-top: 9rpx;
+  color: #7e8983;
+  font-size: 18rpx;
+}
+
+.empty-card {
+  padding: 58rpx 30rpx;
+  text-align: center;
+}
+
+.empty-icon {
+  display: flex;
+  width: 72rpx;
+  height: 72rpx;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  color: #557565;
+  font-size: 27rpx;
+  font-weight: 700;
+  background: #eaf2ee;
+  border-radius: 22rpx;
+}
+
+.empty-title {
+  margin-top: 18rpx;
+  color: #34423c;
+  font-size: 29rpx;
+  font-weight: 600;
+}
+
+.empty-text {
+  margin-top: 8rpx;
+  color: #77827d;
+  font-size: 23rpx;
+}

@@ -1,0 +1,10 @@
+<view class="page" wx:if="{{snack}}">
+  <view class="cover"><image wx:if="{{snack.coverUrl}}" src="{{snack.coverUrl}}" mode="aspectFill"></image><view wx:else class="cover-empty">🍪</view><view class="cover-shade"><view class="title-row"><view class="title">{{snack.name}}</view><view class="status status-{{snack.status}}">{{snack.statusInfo.icon}} {{snack.statusInfo.label}}</view></view><view class="meta">{{snack.brand||'未记录品牌'}} · {{snack.category}}</view></view></view>
+  <view class="stats"><view><text class="stat-value">{{snack.tastingCount}}</text><text>吃过次数</text></view><view><text class="stat-value date-value">{{snack.lastTastedText}}</text><text>最近一次</text></view></view>
+  <view class="card"><view class="card-title"><text>🛒</text>购买地点</view><view class="content">{{snack.purchasePlace||'暂未记录'}}</view></view>
+  <view class="card"><view class="card-title"><text>💭</text>口味感受</view><view class="content">{{snack.note||'吃过之后再补充感受吧'}}</view></view>
+  <view wx:if="{{snack.memoryTag}}" class="memory-card"><text>✨</text><view><view class="memory-label">关于它的记忆</view><view class="memory-value">{{snack.memoryTag}}</view></view></view>
+  <view wx:if="{{snack.records.length}}" class="card"><view class="card-title"><text>📅</text>品尝记录</view><view wx:for="{{snack.records}}" wx:key="id" class="record"><view class="record-date">{{item.tastedAt}}</view><view class="record-note">{{item.note||'这次没有备注'}}</view></view></view>
+  <view wx:if="{{canWrite}}" class="actions"><view class="taste" bindtap="toggleTaste">今天吃了</view><view class="edit" bindtap="edit">编辑</view><view class="delete" bindtap="remove">删除</view></view>
+  <view wx:if="{{showTaste}}" class="mask" bindtap="toggleTaste"><view class="panel" catchtap="noop"><view class="panel-title">记录这次品尝</view><picker mode="date" value="{{record.tastedAt}}" bindchange="dateChange"><view class="input">日期：{{record.tastedAt}}</view></picker><textarea class="note-input" value="{{record.note}}" data-field="note" bindinput="input" placeholder="这次感觉怎么样？"/><view class="panel-save" bindtap="saveTaste">{{saving?'保存中…':'保存记录'}}</view></view></view>
+</view>

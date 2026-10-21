@@ -1,0 +1,53 @@
+<view wx:if="{{visible}}" class="page favorite-page">
+  <view class="page-header">
+    <view class="eyebrow">FAVORITES</view>
+    <view class="page-title">我的收藏</view>
+    <view class="page-subtitle">喜欢的内容，都收在这里。</view>
+  </view>
+
+  <view class="type-filter">
+    <view
+      wx:for="{{filters}}"
+      wx:key="value"
+      class="type-chip {{activeType === item.value ? 'active' : ''}}"
+      data-value="{{item.value}}"
+      bindtap="selectType"
+      hover-class="tap-feedback"
+    >{{item.label}}</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="page-loading">
+    <view class="loading-ring"></view>
+    <text>正在整理我的收藏</text>
+  </view>
+
+  <block wx:else>
+    <view
+      wx:for="{{items}}"
+      wx:key="favoriteId"
+      class="favorite-item card"
+      data-url="{{item.url}}"
+      bindtap="openItem"
+      hover-class="tap-feedback"
+    >
+      <view class="item-icon {{item.type}}">{{item.icon}}</view>
+      <view class="item-copy">
+        <view class="item-heading">
+          <text class="item-title">{{item.title}}</text>
+          <text class="item-type">{{item.typeLabel}}</text>
+        </view>
+        <view class="item-meta">{{item.meta}}</view>
+        <view class="item-detail">{{item.detail}}</view>
+      </view>
+      <view class="item-arrow">›</view>
+    </view>
+
+    <view wx:if="{{items.length === 0}}" class="favorite-empty card">
+      <view class="heart-icon">♡</view>
+      <view class="empty-title">还没有收藏</view>
+      <view class="empty-text">进入任务、吃喝或地点详情，点右上角即可收藏。</view>
+    </view>
+    <view wx:if="{{loadingMore}}" class="list-footer">正在加载更多...</view>
+    <view wx:elif="{{items.length > 0 && !hasMore}}" class="list-footer">已经到底了</view>
+  </block>
+</view>

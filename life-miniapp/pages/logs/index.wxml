@@ -1,0 +1,256 @@
+<view class="page tab-page log-page">
+  <block wx:if="{{authChecked && loggedIn}}">
+    <view class="page-header record-header">
+      <view class="eyebrow">MEMORY CENTER</view>
+      <view class="page-title">记录中心</view>
+      <view class="page-subtitle">记清每一笔花费，也记下生活。</view>
+    </view>
+
+    <view wx:if="{{canReadBill && canReadActivity}}" class="mode-switch">
+      <view wx:if="{{canReadBill}}" class="mode-item {{activeMode === 'bill' ? 'active bill-active' : ''}}" data-mode="bill" bindtap="switchMode">
+        <text class="mode-icon">¥</text><text>账单</text>
+      </view>
+      <view wx:if="{{canReadActivity}}" class="mode-item {{activeMode === 'activity' ? 'active' : ''}}" data-mode="activity" bindtap="switchMode">
+        <text class="mode-icon">记</text><text>生活记录</text>
+      </view>
+    </view>
+
+    <block wx:if="{{activeMode === 'activity'}}">
+      <view wx:if="{{canWriteActivity}}" class="composer-card card {{editingId ? 'editing' : ''}}">
+        <view class="composer-heading">
+          <view>
+            <view class="composer-kicker">{{editingId ? '编辑记录' : '快速记一笔'}}</view>
+            <view class="composer-title">{{editingId ? '修改这段生活片段' : '刚刚做了什么？'}}</view>
+          </view>
+          <view class="voice-button {{recording ? 'recording' : ''}} {{recognizing ? 'recognizing' : ''}}" bindtap="toggleRecording" hover-class="tap-feedback">
+            <view class="voice-glyph"></view><text>{{recognizing ? '整理中' : '语音快速记'}}</text>
+          </view>
+        </view>
+
+        <textarea class="log-input" value="{{content}}" maxlength="1000" auto-height cursor-spacing="24"
+          placeholder="例如：收拾客厅半小时，给猫喂了罐头……" bindinput="onContentInput"></textarea>
+
+        <view class="meta-row">
+          <picker class="meta-picker" mode="date" value="{{dateValue}}" bindchange="onDateChange">
+            <view class="meta-control"><text class="meta-icon">日</text><text>{{dateValue}}</text></view>
+          </picker>
+          <picker class="meta-picker" mode="time" value="{{timeValue}}" bindchange="onTimeChange">
+            <view class="meta-control"><text class="meta-icon">时</text><text>{{timeValue}}</text></view>
+          </picker>
+        </view>
+
+        <view class="duration-row">
+          <text class="duration-label">花费时间 <text class="required-mark">*</text></text>
+          <view class="duration-input-wrap">
+            <input class="duration-input" type="number" value="{{durationValue}}" maxlength="4" placeholder="请输入" bindinput="onDurationInput" />
+            <text>分钟</text>
+          </view>
+        </view>
+
+        <view class="composer-actions">
+          <view wx:if="{{editingId}}" class="cancel-button" bindtap="cancelEdit">取消</view>
+          <button class="save-button" loading="{{saving}}" disabled="{{saving}}" bindtap="saveLog">{{editingId ? '保存修改' : '记下来'}}</button>
+        </view>
+      </view>
+
+      <view class="list-heading">
+        <view><view class="list-title">最近记录</view><view class="list-note">按发生时间整理</view></view>
+        <view class="list-heading-tools">
+          <view class="month-filter-wrap">
+            <view wx:if="{{monthDropdownOpen}}" class="creator-dropdown-mask" bindtap="closeMonthDropdown"></view>
+            <view class="creator-filter month-filter {{monthDropdownOpen ? 'open' : ''}}" catchtap="toggleMonthDropdown">
+              <text>{{monthOptions[monthIndex].label}}</text><view class="filter-arrow"></view>
+            </view>
+            <view wx:if="{{monthDropdownOpen}}" class="creator-dropdown month-dropdown" catchtap="noop">
+              <view class="month-dropdown-year">{{monthFilterYear}}年</view>
+              <view class="month-grid">
+                <view wx:for="{{monthOptions}}" wx:key="month" class="month-grid-item {{monthIndex === index ? 'selected' : ''}}" data-index="{{index}}" catchtap="selectMonth">{{item.shortLabel}}</view>
+              </view>
+            </view>
+          </view>
+          <view class="record-count">{{recordCount}} 条</view>
+        </view>
+      </view>
+
+      <view wx:if="{{groups.length === 0}}" class="empty-card card">
+        <view class="empty-icon">记</view><view class="empty-title">还没有生活记录</view>
+        <view class="empty-text">从刚刚做完的一件小事开始吧。</view>
+      </view>
+
+      <view wx:for="{{groups}}" wx:key="key" class="day-group">
+        <view class="day-heading"><view class="day-dot"></view><text>{{item.label}}</text></view>
+        <view class="timeline">
+          <view wx:for="{{item.items}}" wx:for-item="log" wx:key="id" class="log-card card" data-id="{{log.id}}" bindtap="openLogDetail">
+            <view class="log-meta"><text class="log-time">{{log.timeText}}</text><text wx:if="{{log.durationText}}" class="log-duration">{{log.durationText}}</text></view>
+            <view class="log-content">{{log.content}}</view>
+            <view class="log-footer">
+              <view class="creator-mark">{{log.creatorName}}</view>
+              <view class="log-actions">
+                <view class="log-action detail-action">查看</view>
+                <view wx:if="{{canWriteActivity && log.canEdit}}" class="log-action edit-action" data-id="{{log.id}}" catchtap="editLog" hover-class="tap-feedback">编辑</view>
+                <view wx:if="{{canWriteActivity && log.canEdit}}" class="log-action delete-action" data-id="{{log.id}}" catchtap="deleteLog" hover-class="tap-feedback">删除</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{groups.length > 0}}" class="list-footer">
+        <text wx:if="{{logLoadingMore}}">正在加载更多…</text>
+        <text wx:elif="{{logHasMore}}">继续上滑加载更多</text>
+        <text wx:else>已经到底了</text>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view wx:if="{{canWriteBill}}" class="bill-composer card">
+        <view class="composer-heading">
+          <view><view class="composer-kicker bill-kicker">一句话记账</view><view class="composer-title">今天花了什么？</view></view>
+          <view class="voice-button bill-voice" bindtap="toggleRecording" hover-class="tap-feedback"><view class="voice-glyph"></view><text>直接说</text></view>
+        </view>
+        <view class="quick-input-wrap">
+          <textarea class="quick-input" value="{{quickText}}" maxlength="500" auto-height cursor-spacing="24"
+            placeholder="例如：昨天午饭 28，打车 16" bindinput="onQuickTextInput"></textarea>
+          <view class="quick-submit-row">
+            <text>支持一句话拆成多笔</text>
+            <button class="parse-button" loading="{{parsing}}" disabled="{{parsing}}" bindtap="parseQuickText">AI 整理</button>
+          </view>
+        </view>
+        <view class="quick-hint"><text class="spark">✦</text> 自动识别金额、分类和时间，确认后才会保存</view>
+      </view>
+
+      <view class="bill-overview card">
+        <view class="overview-main">
+          <view class="overview-month-wrap">
+            <view wx:if="{{monthDropdownOpen}}" class="creator-dropdown-mask" bindtap="closeMonthDropdown"></view>
+            <view class="overview-month-filter {{monthDropdownOpen ? 'open' : ''}}" catchtap="toggleMonthDropdown">
+              <text>{{billOverviewLabel}}</text><view class="overview-filter-arrow"></view>
+            </view>
+            <view wx:if="{{monthDropdownOpen}}" class="creator-dropdown overview-month-dropdown" catchtap="noop">
+              <view class="month-dropdown-year">{{monthFilterYear}}年</view>
+              <view class="month-grid">
+                <view wx:for="{{monthOptions}}" wx:key="month" class="month-grid-item {{monthIndex === index ? 'selected' : ''}}" data-index="{{index}}" catchtap="selectMonth">{{item.shortLabel}}</view>
+              </view>
+            </view>
+          </view>
+          <view><text class="currency">¥</text><text class="overview-amount">{{billStats.expenseTotal}}</text></view>
+        </view>
+        <view class="overview-side">
+          <view><text class="side-value">{{billStats.billCount}}</text><text class="side-label">笔记录</text></view>
+        </view>
+      </view>
+
+      <view class="bill-toolbar">
+        <view><view class="list-title">最近账单</view><view class="list-note">所有成员公开可见</view></view>
+        <view class="creator-filter-wrap">
+            <view wx:if="{{creatorDropdownOpen}}" class="creator-dropdown-mask" bindtap="closeCreatorDropdown"></view>
+            <view class="creator-filter {{creatorDropdownOpen ? 'open' : ''}}" catchtap="toggleCreatorDropdown">
+              <text>{{creatorNames[creatorIndex]}}</text><view class="filter-arrow"></view>
+            </view>
+            <view wx:if="{{creatorDropdownOpen}}" class="creator-dropdown" catchtap="noop">
+              <scroll-view class="creator-dropdown-list" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}">
+                <block wx:for="{{creatorOptions}}" wx:key="id">
+                  <view wx:if="{{creatorIndex !== index}}" class="creator-dropdown-item" data-index="{{index}}" catchtap="selectCreator">
+                    <text>{{item.nickname || '未命名用户'}}</text>
+                  </view>
+                </block>
+              </scroll-view>
+            </view>
+        </view>
+      </view>
+
+      <view wx:if="{{billGroups.length === 0}}" class="empty-card card">
+        <view class="empty-icon bill-empty">¥</view><view class="empty-title">还没有账单</view>
+        <view class="empty-text">说一句“午饭花了 25”试试。</view>
+      </view>
+
+      <view wx:for="{{billGroups}}" wx:key="key" class="bill-day">
+        <view class="bill-day-title">{{item.label}}</view>
+        <view class="bill-list card">
+          <view wx:for="{{item.items}}" wx:for-item="bill" wx:key="id" class="bill-row">
+            <view class="bill-category-icon">{{bill.categoryIcon}}</view>
+            <view class="bill-info">
+              <view class="bill-title-line"><text class="bill-title">{{bill.title}}</text><text class="bill-category">{{bill.category}}</text></view>
+              <view class="bill-meta"><text>{{bill.timeText}}</text><text>·</text><text>{{bill.creatorName}}</text><text wx:if="{{bill.note}}">· {{bill.note}}</text></view>
+            </view>
+            <view class="bill-right">
+              <view class="bill-amount {{bill.type === 'income' ? 'income' : ''}}">{{bill.type === 'income' ? '+' : '-'}}¥{{bill.amountText}}</view>
+              <view class="bill-actions">
+                <view wx:if="{{canWriteBill && bill.canEdit}}" class="bill-action edit" data-id="{{bill.id}}" catchtap="editBill" hover-class="tap-feedback">编辑</view>
+                <view wx:if="{{canWriteBill && bill.canEdit}}" class="bill-action delete" data-id="{{bill.id}}" catchtap="deleteBill" hover-class="tap-feedback">删除</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{billGroups.length > 0}}" class="list-footer">
+        <text wx:if="{{billLoadingMore}}">正在加载更多…</text>
+        <text wx:elif="{{billHasMore}}">继续上滑加载更多</text>
+        <text wx:else>已经到底了</text>
+      </view>
+    </block>
+  </block>
+
+  <view wx:elif="{{authChecked}}" class="login-required card">
+    <view class="login-required-icon">记</view><view class="login-required-title">登录后使用记录中心</view>
+    <view class="login-required-text">生活记录和账单仅向已通过的成员展示。</view>
+    <navigator class="login-required-button" url="/pages/index/index" open-type="switchTab">前往登录</navigator>
+  </view>
+  <view wx:else class="page-loading"><view class="loading-ring"></view><text>正在检查登录状态</text></view>
+
+  <view wx:if="{{recording || recognizing}}" class="voice-modal-mask voice-status-mask" catchtap="noop" catchtouchmove="noop">
+    <view class="voice-status-modal">
+      <block wx:if="{{recording}}">
+        <view class="voice-status-orb recording-orb"><view class="voice-glyph"></view><view class="voice-wave"></view><view class="voice-wave voice-wave-two"></view></view>
+        <view class="voice-status-kicker">快速记</view><view class="voice-status-title">正在录音</view>
+        <view class="voice-recording-time">{{recordingSeconds}} 秒</view>
+        <view class="voice-status-note">生活小事或消费都可以说，AI 会自动判断</view>
+        <view class="voice-recording-actions"><view class="voice-discard-button" catchtap="discardVoiceRecording">放弃</view><view class="voice-finish-button" catchtap="finishVoiceRecording">录完</view></view>
+      </block>
+      <block wx:else>
+        <view class="voice-status-orb processing-orb"><view class="voice-processing-ring"></view></view>
+        <view class="voice-status-kicker">AI 正在整理</view><view class="voice-status-title">录音处理中，请等待</view>
+        <view class="voice-status-note">正在识别内容、金额和时间，通常需要几秒钟</view>
+      </block>
+    </view>
+  </view>
+
+  <view wx:if="{{showQuickDraft}}" class="voice-modal-mask" bindtap="discardQuickDraft" catchtouchmove="noop">
+    <view class="voice-modal {{quickDraftIntent === 'bill' ? 'bill-mode' : ''}}" catchtap="noop">
+      <view class="draft-heading">
+        <view class="voice-modal-icon {{quickDraftIntent === 'bill' ? 'bill-draft-icon' : ''}}">{{quickDraftIntent === 'bill' ? '¥' : '记'}}</view>
+        <view><view class="voice-modal-kicker">AI 已整理</view><view class="voice-modal-title">{{editingBillId ? '编辑这笔账单' : '确认一下，再保存'}}</view></view>
+      </view>
+
+      <block wx:if="{{quickDraftIntent === 'activity_log'}}">
+        <scroll-view class="voice-modal-scroll activity-draft-scroll" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{true}}" bounces="{{true}}">
+          <view class="voice-result-card"><view class="voice-result-label">生活记录</view><view class="voice-result-content">{{activityDraft.content}}</view><view class="voice-result-meta">{{activityDraft.durationMinutes ? activityDraft.durationMinutes + ' 分钟' : '未识别时长，填入后请补充'}}</view></view>
+          <view wx:if="{{rawDraftText}}" class="voice-raw"><view class="voice-result-label">原始识别</view><view>{{rawDraftText}}</view></view>
+        </scroll-view>
+        <view class="voice-modal-actions"><view class="voice-cancel" catchtap="discardQuickDraft">不要了</view><view class="voice-confirm" catchtap="confirmActivityDraft">填入生活记录</view></view>
+      </block>
+
+      <block wx:else>
+        <scroll-view class="voice-modal-scroll bill-draft-scroll" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{true}}" bounces="{{true}}">
+          <view class="draft-count">共识别到 {{billDrafts.length}} 笔，保存前可以修改</view>
+          <view wx:for="{{billDrafts}}" wx:for-item="draft" wx:for-index="billIndex" wx:key="index" class="bill-draft-card">
+            <view class="bill-draft-number">第 {{billIndex + 1}} 笔</view>
+            <view class="draft-type-row">
+              <view class="draft-type {{draft.type === 'expense' ? 'active' : ''}}" data-index="{{billIndex}}" data-type="expense" catchtap="onBillTypeTap">支出</view>
+              <view class="draft-type income-type {{draft.type === 'income' ? 'active' : ''}}" data-index="{{billIndex}}" data-type="income" catchtap="onBillTypeTap">收入</view>
+            </view>
+            <view class="draft-field"><text class="draft-label">标题</text><input value="{{draft.title}}" data-index="{{billIndex}}" data-field="title" bindinput="onBillDraftInput" /></view>
+            <view class="draft-field amount-field"><text class="draft-label">金额</text><view class="amount-input"><text>¥</text><input type="digit" value="{{draft.amount}}" data-index="{{billIndex}}" data-field="amount" bindinput="onBillDraftInput" /></view></view>
+            <view class="draft-grid">
+              <picker mode="selector" range="{{billCategories}}" value="{{draft.categoryIndex}}" data-index="{{billIndex}}" bindchange="onBillCategoryChange"><view class="draft-picker"><text class="draft-label">分类</text><text>{{draft.categoryIcon}} {{draft.category}} 〉</text></view></picker>
+              <picker mode="date" value="{{draft.dateValue}}" data-index="{{billIndex}}" bindchange="onBillDateChange"><view class="draft-picker"><text class="draft-label">日期</text><text>{{draft.dateValue}}</text></view></picker>
+              <picker mode="time" value="{{draft.timeValue}}" data-index="{{billIndex}}" bindchange="onBillTimeChange"><view class="draft-picker"><text class="draft-label">时间</text><text>{{draft.timeValue}}</text></view></picker>
+            </view>
+            <view class="draft-field"><text class="draft-label">备注</text><input value="{{draft.note}}" placeholder="可不填" data-index="{{billIndex}}" data-field="note" bindinput="onBillDraftInput" /></view>
+          </view>
+          <view wx:if="{{rawDraftText}}" class="voice-raw"><view class="voice-result-label">原始输入</view><view>{{rawDraftText}}</view></view>
+        </scroll-view>
+        <view class="voice-modal-actions"><view class="voice-cancel" catchtap="discardQuickDraft">取消</view><button class="voice-confirm bill-confirm" loading="{{saving}}" disabled="{{saving}}" catchtap="saveBillDrafts">{{editingBillId ? '保存修改' : '确认入账'}}</button></view>
+      </block>
+    </view>
+  </view>
+</view>

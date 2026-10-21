@@ -1,0 +1,145 @@
+<view class="page report-page">
+  <view class="page-header">
+    <view class="eyebrow">LIFE REVIEW</view>
+    <view class="page-title">生活报告</view>
+    <view class="page-subtitle">从日常流水里，慢慢看见生活的节奏。</view>
+  </view>
+
+  <view class="range-switch">
+    <view
+      wx:for="{{rangeOptions}}"
+      wx:key="value"
+      class="range-item {{range === item.value ? 'active' : ''}}"
+      data-value="{{item.value}}"
+      bindtap="selectRange"
+    >{{item.label}}</view>
+  </view>
+
+  <picker
+    wx:if="{{range === 'month'}}"
+    mode="date"
+    fields="month"
+    value="{{selectedMonth}}"
+    bindchange="onMonthChange"
+  >
+    <view class="period-picker card">
+      <text>{{periodLabel}}</text>
+      <text class="picker-arrow">⌄</text>
+    </view>
+  </picker>
+  <picker
+    wx:else
+    mode="date"
+    fields="year"
+    value="{{selectedYear}}"
+    bindchange="onYearChange"
+  >
+    <view class="period-picker card">
+      <text>{{periodLabel}}</text>
+      <text class="picker-arrow">⌄</text>
+    </view>
+  </picker>
+
+  <view wx:if="{{loading}}" class="page-loading">
+    <view class="loading-ring"></view>
+    <text>正在整理生活记录</text>
+  </view>
+
+  <block wx:else>
+    <view class="summary-card card">
+      <view class="summary-kicker">{{range === 'month' ? '本月小结' : '年度小结'}}</view>
+      <view class="summary-text">{{summary}}</view>
+      <view class="summary-note">时长仅统计填写过时长的记录</view>
+    </view>
+
+    <view class="ai-report-card card">
+      <view class="ai-report-heading">
+        <view class="ai-report-title"><text>✦</text> AI 生活总结</view>
+        <view wx:if="{{aiSummary}}" class="ai-report-refresh" data-refresh="{{true}}" bindtap="generateAISummary">重新生成</view>
+      </view>
+      <view wx:if="{{aiLoading}}" class="ai-report-loading">
+        <view class="loading-ring"></view>
+        <text>正在阅读这段时间的生活数据…</text>
+      </view>
+      <view wx:elif="{{aiSummary}}">
+        <view class="ai-report-summary">{{aiSummary.summary}}</view>
+        <view wx:if="{{aiSummary.highlights.length}}" class="ai-report-section">
+          <view class="ai-report-label">这段时间的亮点</view>
+          <view wx:for="{{aiSummary.highlights}}" wx:key="*this" class="ai-report-line highlight"><text>✓</text><view>{{item}}</view></view>
+        </view>
+        <view wx:if="{{aiSummary.suggestions.length}}" class="ai-report-section">
+          <view class="ai-report-label">接下来可以试试</view>
+          <view wx:for="{{aiSummary.suggestions}}" wx:key="*this" class="ai-report-line suggestion"><text>{{index + 1}}</text><view>{{item}}</view></view>
+        </view>
+        <view class="ai-report-source">{{aiSummary.cached ? '已读取今日缓存' : '根据你的任务、记录与消费生成'}}</view>
+      </view>
+      <view wx:else class="ai-report-empty">
+        <view>让 AI 从任务、生活记录和消费中整理一份简短回顾。</view>
+        <view class="ai-report-button" bindtap="generateAISummary">生成本期总结</view>
+      </view>
+    </view>
+
+    <view class="stats-card card">
+      <view class="stat-item">
+        <view class="stat-value">{{stats.recordCount}}</view>
+        <view class="stat-label">记录</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-value duration">{{stats.totalDurationText}}</view>
+        <view class="stat-label">累计时长</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-value days">{{stats.activeDays}}</view>
+        <view class="stat-label">活跃天数</view>
+      </view>
+    </view>
+
+    <view wx:if="{{hasRecords}}" class="detail-card card">
+      <view class="detail-item">
+        <text>填写时长的记录</text>
+        <text>{{stats.durationRecordCount}} 条</text>
+      </view>
+      <view class="detail-item">
+        <text>平均每次</text>
+        <text>{{stats.averageDurationText}}</text>
+      </view>
+      <view class="detail-item">
+        <text>最长一次</text>
+        <text>{{stats.longestDurationText}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{hasRecords}}" class="trend-card card">
+      <view class="trend-heading">
+        <view class="trend-title">{{range === 'month' ? '记录分布' : '全年趋势'}}</view>
+        <view class="trend-note">按记录时间统计</view>
+      </view>
+
+      <view wx:if="{{range === 'month'}}" class="day-bars">
+        <view wx:for="{{chartItems}}" wx:key="key" class="day-bar-row">
+          <text class="day-label">{{item.label}}</text>
+          <view class="day-track">
+            <view class="day-fill" style="width: {{item.barPercent}}%;"></view>
+          </view>
+          <text class="day-value">{{item.valueText}}</text>
+        </view>
+      </view>
+
+      <view wx:else class="year-bars">
+        <view wx:for="{{chartItems}}" wx:key="month" class="month-column">
+          <view class="month-value">{{item.recordCount || ''}}</view>
+          <view class="month-track">
+            <view class="month-fill" style="height: {{item.barPercent}}%;"></view>
+          </view>
+          <view class="month-label">{{item.month}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:else class="empty-card card">
+      <view class="empty-icon">月</view>
+      <view class="empty-title">还没有可以汇总的记录</view>
+      <view class="empty-text">去“记录”页写下今天做过的事吧。</view>
+    </view>
+  </block>
+</view>

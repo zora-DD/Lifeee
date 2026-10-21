@@ -1,0 +1,55 @@
+<view class="page">
+  <view class="hero">
+    <view class="eyebrow">HOME COOKING</view>
+    <view class="title">{{editing?'编辑这道菜':'记录一道家常菜'}}</view>
+    <view class="subtitle">简单记下配料、步骤和心得，下次做得更顺手。</view>
+  </view>
+
+  <view class="form-card">
+    <view class="cover" bindtap="chooseImage">
+      <image wx:if="{{previewUrl}}" src="{{previewUrl}}" mode="aspectFill"></image>
+      <view wx:else class="cover-empty">＋ 添加成品或菜谱图片</view>
+      <view wx:if="{{uploading}}" class="cover-status">正在上传...</view>
+    </view>
+
+    <view class="image-hint">点击图片可重新选择</view>
+
+    <view class="field">
+      <text>菜名 *</text>
+      <input value="{{form.name}}" data-field="name" bindinput="input" placeholder="例如：番茄牛腩"/>
+    </view>
+    <view class="field">
+      <text>分类 *</text>
+      <input value="{{form.category}}" data-field="category" bindinput="input" placeholder="家常菜、汤羹、面食、烘焙"/>
+    </view>
+    <view class="field">
+      <text>主要配料</text>
+      <textarea value="{{form.ingredients}}" data-field="ingredients" bindinput="input" placeholder="番茄、牛腩、洋葱、土豆…"/>
+    </view>
+    <view class="field">
+      <text>制作步骤</text>
+      <textarea class="steps" value="{{form.steps}}" data-field="steps" bindinput="input" placeholder="1. 牛腩焯水\n2. 番茄炒出汤汁\n3. 加水炖煮…"/>
+      <view class="field-hint">建议每个步骤单独一行，详情页会自动排版。</view>
+    </view>
+    <view class="row">
+      <view class="field half">
+        <text>难度</text>
+        <picker range="{{difficulties}}" range-key="label" value="{{difficultyIndex}}" bindchange="difficultyChange">
+          <view class="picker">{{difficulties[difficultyIndex].label}}⌄</view>
+        </picker>
+      </view>
+      <view class="field half">
+        <text>预计用时</text>
+        <input type="number" value="{{form.estimatedMinutes}}" data-field="estimatedMinutes" bindinput="input" placeholder="分钟"/>
+      </view>
+    </view>
+    <view class="field">
+      <text>心得</text>
+      <textarea class="experience" value="{{form.experience}}" data-field="experience" bindinput="input" placeholder="味道怎么样？下次想怎么改进？"/>
+    </view>
+  </view>
+
+  <view class="save {{saving||uploading?'disabled':''}}" bindtap="save">
+    {{saving?'保存中…':'保存菜品'}}
+  </view>
+</view>

@@ -1,0 +1,17 @@
+# 构建产物
+/bin/
+*.test
+*.out
+
+# 运行文件
+*.log
+
+# 本地配置（仓库仅提交 conf.example.yaml）
+/conf.yaml
+/data/
+/.voice.env
+
+# 编辑器与系统文件
+.idea/
+.vscode/
+.DS_Store

@@ -1,0 +1,130 @@
+<view class="page tab-page">
+  <block wx:if="{{authChecked && loggedIn}}">
+  <view class="page-header">
+    <view class="eyebrow">PLACES</view>
+    <view class="page-title">地点记录</view>
+    <view class="page-subtitle">去过的留下记忆，没去过的留给下一次出发。</view>
+  </view>
+
+  <view class="overview-card card">
+    <view class="overview-item">
+      <view class="overview-value">{{totalCount}}</view>
+      <view class="overview-label">全部地点</view>
+    </view>
+    <view class="overview-item">
+      <view class="overview-value visited">{{visitedCount}}</view>
+      <view class="overview-label">已经去过</view>
+    </view>
+    <view class="overview-item">
+      <view class="overview-value wishlist">{{wishlistCount}}</view>
+      <view class="overview-label">还想去</view>
+    </view>
+  </view>
+
+  <view wx:if="{{categoryDropdownOpen}}" class="category-dropdown-mask" bindtap="closeCategoryDropdown"></view>
+  <view class="filter-card card {{categoryDropdownOpen ? 'dropdown-open' : ''}}">
+    <view class="status-row">
+      <view
+        wx:for="{{statusFilters}}"
+        wx:key="value"
+        class="status-chip {{statusFilter === item.value ? 'active' : ''}}"
+        data-value="{{item.value}}"
+        bindtap="selectStatus"
+        hover-class="tap-feedback"
+      >{{item.label}}</view>
+    </view>
+    <view class="category-picker">
+      <view class="picker-value {{categoryDropdownOpen ? 'open' : ''}}" bindtap="toggleCategoryDropdown">
+        <text>{{selectedCategoryLabel}}</text>
+        <view class="picker-arrow"></view>
+      </view>
+      <view wx:if="{{categoryDropdownOpen}}" class="category-dropdown" catchtap="noop">
+        <scroll-view class="category-dropdown-list" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{false}}">
+          <view
+            wx:for="{{categories}}"
+            wx:key="value"
+            class="category-dropdown-item {{categoryIndex === index ? 'selected' : ''}}"
+            data-index="{{index}}"
+            catchtap="selectCategory"
+          >
+            <text>{{item.label}}</text>
+            <text wx:if="{{categoryIndex === index}}" class="category-selected-mark">✓</text>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+  </view>
+
+  <view class="list-heading">
+    <text>地点记录</text>
+    <text class="result-count">{{places.length}} / {{resultCount}} 个</text>
+  </view>
+
+  <view
+    wx:for="{{places}}"
+    wx:key="id"
+    class="place-card card"
+    data-id="{{item.id}}"
+    bindtap="openDetail"
+    hover-class="tap-feedback"
+  >
+    <view class="cover tone-{{item.coverTone}} category-cover-{{item.category}} {{item.coverUrl ? 'has-cover' : ''}}">
+      <image wx:if="{{item.coverUrl}}" class="cover-image" src="{{item.coverUrl}}" mode="aspectFill"></image>
+      <view wx:if="{{item.coverUrl}}" class="cover-shade"></view>
+      <view wx:if="{{item.coverUrl}}" class="cover-category">
+        <text>{{item.icon}}</text>
+        <text>{{item.category}}</text>
+      </view>
+      <view wx:else class="place-icon">{{item.icon}}</view>
+      <view class="visit-status {{item.visited ? 'visited' : 'wishlist'}}">
+        {{item.visited ? '✓ 去过' : '＋ 想去'}}
+      </view>
+    </view>
+    <view class="place-content">
+      <view class="place-title-row">
+        <view>
+          <view wx:if="{{!item.coverUrl}}" class="place-category">{{item.category}}</view>
+          <view class="place-name {{item.coverUrl ? 'cover-name' : ''}}">{{item.name}}</view>
+        </view>
+        <view class="place-arrow">›</view>
+      </view>
+      <view class="place-feature">{{item.feature}}</view>
+      <view wx:if="{{item.travelMeta}}" class="travel-meta">
+        <text class="travel-meta-icon">🚗</text>
+        <text>{{item.travelMeta}}</text>
+      </view>
+      <view class="visit-meta {{item.visited ? '' : 'not-visited'}}">
+        {{item.visitText}}
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{places.length === 0}}" class="empty-card card">
+    <view class="empty-icon">⌖</view>
+    <view class="empty-title">没有匹配的地点</view>
+    <view class="empty-text">换个分类看看，或记录一个新地点。</view>
+  </view>
+
+  <view wx:if="{{places.length > 0}}" class="list-footer">
+    <text wx:if="{{loadingMore}}">正在加载更多…</text>
+    <text wx:elif="{{hasMore}}">继续上滑加载更多</text>
+    <text wx:else>已经到底了</text>
+  </view>
+
+  <view wx:if="{{canWrite}}" class="create-button" bindtap="createPlace" hover-class="tap-feedback">
+    <text class="create-plus">＋</text>
+    <text>新建地点</text>
+  </view>
+  </block>
+
+  <view wx:elif="{{authChecked}}" class="login-required card">
+    <view class="login-required-icon place">⌖</view>
+    <view class="login-required-title">登录后查看地点</view>
+    <view class="login-required-text">想去和去过的地点，登录后才会展示。</view>
+    <navigator class="login-required-button" url="/pages/index/index" open-type="switchTab">前往登录</navigator>
+  </view>
+  <view wx:else class="page-loading">
+    <view class="loading-ring"></view>
+    <text>正在检查登录状态</text>
+  </view>
+</view>

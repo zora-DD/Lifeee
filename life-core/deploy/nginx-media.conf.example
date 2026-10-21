@@ -1,0 +1,45 @@
+# 放在 nginx 的 http {} 中；如果 /etc/nginx/conf.d/*.conf 已在 http {} 内加载，可单独保存为 conf.d/lifeee-rate-limit.conf。
+limit_req_zone $binary_remote_addr zone=life_media_download:10m rate=120r/m;
+limit_req_zone $binary_remote_addr zone=life_media_upload:10m rate=10r/m;
+limit_conn_zone $binary_remote_addr zone=life_media_conn:10m;
+
+# 以下 location 放入你的 API 域名对应的 server {} 中；当前项目计划使用 lifeee.zoradu.cn。
+location = /v1/life-core/media/upload {
+    client_max_body_size 6m;
+    limit_req zone=life_media_upload burst=5 nodelay;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Authorization $http_authorization;
+    proxy_pass http://127.0.0.1:8084;
+}
+
+location ^~ /media/ {
+    limit_req zone=life_media_download burst=40 nodelay;
+    limit_conn life_media_conn 20;
+    auth_request /_life_media_auth;
+    alias /var/lib/lifeee/media/;
+    autoindex off;
+    expires 1h;
+    add_header Cache-Control "private, max-age=3600" always;
+    add_header X-Content-Type-Options "nosniff" always;
+}
+
+# 文件目录需让 lifeee 进程可写、Nginx worker 可读。
+# 推荐让二者使用同一个共享组，并保持目录 0750、文件 0640；不要直接暴露该目录。
+
+# 禁止客户端直接调用内部验签接口，只允许下面的 auth_request 子请求访问上游。
+location = /v1/life-core/media/authorize {
+    return 404;
+}
+
+location = /_life_media_auth {
+    internal;
+    proxy_pass_request_body off;
+    proxy_set_header Content-Length "";
+    proxy_set_header X-Original-URI $request_uri;
+    proxy_set_header X-Real-IP $remote_addr;
+    # 尾部 ? 明确丢弃原查询参数，签名只通过 X-Original-URI 传递，避免写入 Go 访问日志。
+    proxy_pass http://127.0.0.1:8084/v1/life-core/media/authorize?;
+}

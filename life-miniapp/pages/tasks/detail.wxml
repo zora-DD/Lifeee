@@ -1,0 +1,76 @@
+<view wx:if="{{task}}" class="page detail-page">
+  <view class="task-overview card priority-{{task.priority}}">
+    <view class="overview-top">
+      <view class="state-pill {{task.status === 'done' ? 'done' : task.overdue ? 'overdue' : 'todo'}}">
+        <text class="state-dot"></text>
+        <text>{{task.stateText}}</text>
+      </view>
+      <view class="overview-actions">
+        <view class="priority-pill priority-{{task.priority}}">{{task.priorityText}}</view>
+        <view
+          wx:if="{{canWrite}}"
+          class="favorite-button {{favorited ? 'active' : ''}} {{favoriteSaving ? 'disabled' : ''}}"
+          bindtap="toggleFavorite"
+          hover-class="favorite-hover"
+        >{{favorited ? '♥' : '♡'}}</view>
+      </view>
+    </view>
+
+    <view class="detail-title {{task.status === 'done' ? 'completed' : ''}}">{{task.title}}</view>
+
+    <view class="deadline-box {{task.overdue ? 'overdue' : ''}}">
+      <view class="deadline-icon">◷</view>
+      <view class="deadline-copy">
+        <view class="deadline-label">截止时间</view>
+        <view class="deadline-value">{{task.dueText}}</view>
+      </view>
+      <view wx:if="{{task.overdue}}" class="overdue-text">已逾期</view>
+    </view>
+  </view>
+
+  <view class="content-card card">
+    <view class="section-heading">
+      <view class="section-mark"></view>
+      <view class="section-title">任务内容</view>
+    </view>
+    <view class="description">{{task.description || '暂无说明'}}</view>
+    <view class="tag-row">
+      <view wx:for="{{task.tags}}" wx:key="*this" class="task-tag">{{item}}</view>
+    </view>
+  </view>
+
+  <view class="info-card card">
+    <view class="section-heading">
+      <view class="section-mark muted"></view>
+      <view class="section-title">记录信息</view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">创建人</view>
+      <view class="creator">
+        <view class="creator-avatar" style="background: {{task.creator.avatarColor}};">{{task.creatorInitial}}</view>
+        <text>{{task.creator.name}}</text>
+      </view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">创建时间</view>
+      <view class="info-value">{{task.createdText}}</view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">更新时间</view>
+      <view class="info-value">{{task.updatedText}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{canEdit}}" class="action-card card">
+    <button class="complete-button" bindtap="toggleStatus">
+      <text class="button-icon">{{task.status === 'done' ? '↺' : '✓'}}</text>
+      {{task.status === 'done' ? '恢复待做' : '标记完成'}}
+    </button>
+    <button class="edit-button" bindtap="editTask">编辑任务</button>
+  </view>
+  <button class="detail-share-button" open-type="share" hover-class="share-button-hover">
+    <text class="share-button-icon">↗</text>
+    <text>分享这条任务</text>
+  </button>
+  <view wx:if="{{canEdit}}" class="delete-action" bindtap="deleteTask" hover-class="tap-feedback">删除这条任务</view>
+</view>

@@ -1,0 +1,109 @@
+<view class="page calendar-page">
+  <view class="page-header calendar-header">
+    <view class="eyebrow">TASK CALENDAR</view>
+    <view class="page-title">任务日历</view>
+    <view class="page-subtitle">按周安排当下，也能看看整月的任务分布。</view>
+  </view>
+
+  <view wx:if="{{ready}}" class="calendar-card card">
+    <view class="calendar-toolbar">
+      <view class="period-arrow" data-direction="-1" bindtap="changePeriod">‹</view>
+      <view class="period-main">
+        <view class="period-title">{{periodTitle}}</view>
+        <view class="today-action" bindtap="goToday">回到今天</view>
+      </view>
+      <view class="period-arrow" data-direction="1" bindtap="changePeriod">›</view>
+    </view>
+
+    <view class="view-switch">
+      <view
+        wx:for="{{viewOptions}}"
+        wx:key="value"
+        class="view-option {{viewMode === item.value ? 'active' : ''}}"
+        data-value="{{item.value}}"
+        bindtap="switchView"
+      >{{item.label}}</view>
+    </view>
+
+    <view wx:if="{{viewMode === 'month'}}" class="weekday-header">
+      <view wx:for="{{weekHeaders}}" wx:key="*this" class="weekday-name {{index > 4 ? 'weekend' : ''}}">{{item}}</view>
+    </view>
+
+    <view class="calendar-grid {{viewMode}}-grid">
+      <view
+        wx:for="{{days}}"
+        wx:key="key"
+        class="calendar-day {{item.key === selectedDate ? 'selected' : ''}} {{item.isToday ? 'today' : ''}} {{item.isWeekend ? 'weekend' : ''}} {{!item.inCurrentMonth && viewMode === 'month' ? 'outside' : ''}}"
+        data-date="{{item.key}}"
+        data-task-count="{{item.taskCount}}"
+        bindtap="selectDay"
+      >
+        <view wx:if="{{viewMode === 'week'}}" class="week-name">周{{item.weekday}}</view>
+        <view class="day-number">{{item.day}}</view>
+        <view wx:if="{{item.taskCount}}" class="day-count">{{item.todoCount ? item.todoCount + ' 待办' : '已完成'}}</view>
+        <view wx:else class="day-count empty">无安排</view>
+        <view class="day-markers">
+          <view wx:for="{{item.markers}}" wx:key="id" wx:for-item="marker" class="day-marker priority-{{marker.priority}} {{marker.done ? 'done' : ''}}"></view>
+          <text wx:if="{{item.overflowCount}}" class="marker-more">+{{item.overflowCount}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="calendar-legend">
+      <view><text class="legend-dot high"></text>高</view>
+      <view><text class="legend-dot medium"></text>中</view>
+      <view><text class="legend-dot low"></text>低</view>
+      <view><text class="legend-dot done"></text>完成</view>
+    </view>
+  </view>
+
+  <view wx:if="{{ready}}" class="range-summary">
+    <view><text>{{rangeTotal}}</text>项任务</view>
+    <view><text>{{rangeTodo}}</text>待处理</view>
+    <view><text>{{rangeDone}}</text>已完成</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="calendar-state card">
+    <view class="loading-ring"></view>
+    <text>正在整理日历</text>
+  </view>
+  <view wx:elif="{{loadError}}" class="calendar-state card">
+    <text>{{loadError}}</text>
+    <view class="retry-action" bindtap="retryLoad">重新加载</view>
+  </view>
+
+  <view wx:elif="{{ready}}" class="day-section" style="min-height: {{daySectionMinHeight}}rpx;">
+    <view class="day-section-heading">
+      <view>
+        <view class="day-section-title">{{selectedDateLabel}}</view>
+        <view class="day-section-subtitle">{{selectedTasks.length ? selectedTasks.length + ' 项安排' : '今天没有安排'}}</view>
+      </view>
+      <view wx:if="{{canWrite}}" class="day-create-action" bindtap="createTaskForSelectedDate" hover-class="tap-feedback">＋ 新建</view>
+    </view>
+
+    <view wx:if="{{!selectedTasks.length}}" class="day-empty card">
+      <view class="day-empty-icon">＋</view>
+      <view>{{canWrite ? '点击日期或右上角新建安排' : '留一点时间给自己'}}</view>
+    </view>
+
+    <view
+      wx:for="{{selectedTasks}}"
+      wx:key="id"
+      class="calendar-task card priority-{{item.priority}} {{item.status === 'done' ? 'done' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="openTask"
+      hover-class="tap-feedback"
+    >
+      <view class="calendar-task-time">{{item.timeText}}</view>
+      <view class="calendar-task-main">
+        <view class="calendar-task-title">{{item.title}}</view>
+        <view class="calendar-task-meta">
+          <text class="calendar-priority">{{item.priorityText}}</text>
+          <text wx:if="{{item.tags.length}}">{{item.tags[0]}}</text>
+          <text>{{item.status === 'done' ? '已完成' : '待处理'}}</text>
+        </view>
+      </view>
+      <view class="calendar-task-arrow">›</view>
+    </view>
+  </view>
+</view>

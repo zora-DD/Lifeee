@@ -1,0 +1,138 @@
+<view class="page form-page">
+  <view class="page-header">
+    <view class="eyebrow">{{isEdit ? 'EDIT TASK' : 'NEW TASK'}}</view>
+    <view class="page-title">{{isEdit ? '编辑任务' : '创建任务'}}</view>
+    <view class="page-subtitle">把必要信息写清楚，其他内容以后再补。</view>
+  </view>
+
+  <view class="form-card card">
+    <view wx:if="{{!isEdit}}" class="voice-create-entry" bindtap="startVoiceRecording" hover-class="tap-feedback">
+      <view class="voice-entry-icon"><view class="voice-glyph"></view></view>
+      <view class="voice-entry-copy">
+        <view class="voice-entry-title">语音创建任务</view>
+        <view class="voice-entry-note">说出要做的事，AI 帮你整理内容和标签</view>
+      </view>
+      <view class="voice-entry-arrow">›</view>
+    </view>
+
+    <view class="form-group">
+      <view class="form-label">任务名称 <text class="required">*</text></view>
+      <input class="form-input" value="{{title}}" maxlength="60" placeholder="要完成什么？" bindinput="onTitleInput" />
+    </view>
+
+    <view class="form-group">
+      <view class="form-label">任务说明</view>
+      <textarea class="form-textarea" value="{{description}}" maxlength="300" placeholder="补充背景或完成标准" bindinput="onDescriptionInput" />
+    </view>
+
+    <view class="form-group">
+      <view class="form-label">优先级</view>
+      <view class="priority-selector">
+        <view
+          wx:for="{{priorityOptions}}"
+          wx:key="value"
+          class="priority-option {{priority === item.value ? 'active ' + item.value : ''}}"
+          data-value="{{item.value}}"
+          bindtap="selectPriority"
+          hover-class="tap-feedback"
+        >
+          <view class="priority-dot"></view>
+          {{item.label}}
+        </view>
+      </view>
+    </view>
+
+    <view class="form-group">
+      <view class="form-label">分类标签</view>
+      <picker mode="selector" range="{{categories}}" value="{{categoryIndex}}" bindchange="onCategoryChange">
+        <view class="picker-field">
+          <text>{{categories[categoryIndex]}}</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-group">
+      <view class="form-label">截止时间</view>
+      <view class="date-row">
+        <picker class="date-picker" mode="date" value="{{dueDate}}" bindchange="onDateChange">
+          <view class="picker-field date-picker-field">
+            <text>{{dueDate}}</text>
+            <text class="weekday-pill {{dueWeekday === '周六' || dueWeekday === '周日' ? 'weekend' : ''}}">{{dueWeekday}}</text>
+          </view>
+        </picker>
+        <picker class="time-picker" mode="time" value="{{dueTime}}" bindchange="onTimeChange">
+          <view class="picker-field">{{dueTime}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="form-group creator-group">
+      <view>
+        <view class="form-label">创建人</view>
+        <view class="form-hint">后续接入登录用户信息</view>
+      </view>
+      <view class="creator-pill">我</view>
+    </view>
+  </view>
+
+  <button class="save-button" loading="{{saving}}" disabled="{{saving}}" bindtap="save">
+    {{saving ? '保存中…' : '保存任务'}}
+  </button>
+
+  <view wx:if="{{recording || recognizing}}" class="voice-modal-mask" catchtap="noop" catchtouchmove="noop">
+    <view class="voice-status-modal">
+      <block wx:if="{{recording}}">
+        <view class="voice-status-orb recording-orb">
+          <view class="voice-glyph"></view>
+          <view class="voice-wave voice-wave-one"></view>
+          <view class="voice-wave voice-wave-two"></view>
+        </view>
+        <view class="voice-status-kicker">语音创建任务</view>
+        <view class="voice-status-title">正在录音</view>
+        <view class="voice-recording-time">{{recordingSeconds}} 秒</view>
+        <view class="voice-status-note">例如：“周五下班前整理项目周报”</view>
+        <view class="voice-recording-actions">
+          <view class="voice-discard-button" catchtap="discardVoiceRecording">放弃</view>
+          <view class="voice-finish-button" catchtap="finishVoiceRecording">录完</view>
+        </view>
+      </block>
+
+      <block wx:else>
+        <view class="voice-status-orb processing-orb">
+          <view class="voice-processing-ring"></view>
+        </view>
+        <view class="voice-status-kicker">AI 正在整理</view>
+        <view class="voice-status-title">录音处理中，请等待</view>
+        <view class="voice-status-note">正在提取任务名称、说明和分类标签</view>
+      </block>
+    </view>
+  </view>
+
+  <view wx:if="{{showVoiceDraft}}" class="voice-modal-mask voice-draft-mask" bindtap="discardVoiceDraft" catchtouchmove="noop">
+    <view class="voice-draft-modal" catchtap="noop">
+      <view class="voice-draft-icon"><view class="voice-glyph"></view></view>
+      <view class="voice-status-kicker left">语音已整理</view>
+      <view class="voice-draft-title">确认一下，再填入任务</view>
+
+      <scroll-view class="voice-draft-scroll" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{true}}" bounces="{{true}}">
+        <view class="voice-task-preview">
+          <view class="voice-preview-label">任务名称</view>
+          <view class="voice-preview-title">{{voiceDraft.title}}</view>
+          <view wx:if="{{voiceDraft.description}}" class="voice-preview-description">{{voiceDraft.description}}</view>
+          <view class="voice-preview-tag">{{voiceDraft.category}}</view>
+        </view>
+
+        <view wx:if="{{voiceDraft.rawText}}" class="voice-raw-text">
+          <view class="voice-preview-label">原始识别</view>
+          <view>{{voiceDraft.rawText}}</view>
+        </view>
+      </scroll-view>
+
+      <view class="voice-draft-actions">
+        <view class="voice-discard-button" catchtap="discardVoiceDraft">不要了</view>
+        <view class="voice-finish-button" catchtap="confirmVoiceDraft">填入任务</view>
+      </view>
+    </view>
+  </view>
+</view>

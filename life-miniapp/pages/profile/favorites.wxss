@@ -1,0 +1,149 @@
+.favorite-page {
+  padding-bottom: 70rpx;
+}
+
+.type-filter {
+  display: flex;
+  gap: 10rpx;
+  margin-bottom: 26rpx;
+  padding: 8rpx;
+  background: #edf1ef;
+  border-radius: 22rpx;
+}
+
+.type-chip {
+  flex: 1;
+  padding: 14rpx 4rpx;
+  color: #6c7771;
+  font-size: 23rpx;
+  text-align: center;
+  border-radius: 16rpx;
+}
+
+.type-chip.active {
+  color: #456f5d;
+  font-weight: 600;
+  background: #ffffff;
+  box-shadow: 0 5rpx 14rpx rgba(48, 65, 57, 0.08);
+}
+
+.favorite-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18rpx;
+  padding: 26rpx 24rpx;
+}
+
+.item-icon {
+  display: flex;
+  width: 68rpx;
+  height: 68rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: #557565;
+  font-size: 29rpx;
+  font-weight: 700;
+  background: #edf3f0;
+  border-radius: 21rpx;
+}
+
+.item-icon.restaurant {
+  color: #8b6642;
+  background: #f6eee4;
+}
+
+.item-icon.place {
+  color: #54798b;
+  background: #eaf1f4;
+}
+
+.item-copy {
+  flex: 1;
+  min-width: 0;
+  margin-left: 20rpx;
+}
+
+.item-heading {
+  display: flex;
+  align-items: center;
+}
+
+.item-title {
+  max-width: 340rpx;
+  overflow: hidden;
+  color: #303d37;
+  font-size: 28rpx;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-type {
+  margin-left: 12rpx;
+  padding: 4rpx 10rpx;
+  color: #77827c;
+  font-size: 22rpx;
+  background: #f1f3f2;
+  border-radius: 10rpx;
+}
+
+.item-meta,
+.item-detail {
+  margin-top: 7rpx;
+  overflow: hidden;
+  color: #68736d;
+  font-size: 23rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-detail {
+  color: #89928e;
+  font-size: 22rpx;
+}
+
+.item-arrow {
+  margin-left: 12rpx;
+  color: #a4ada8;
+  font-size: 40rpx;
+}
+
+.favorite-empty {
+  margin-top: 46rpx;
+  padding: 64rpx 36rpx;
+  text-align: center;
+  background: linear-gradient(145deg, #ffffff, #fbf6ef);
+}
+
+.heart-icon {
+  display: flex;
+  width: 84rpx;
+  height: 84rpx;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  color: #9a744d;
+  font-size: 46rpx;
+  background: #f7eee4;
+  border-radius: 26rpx;
+}
+
+.empty-title {
+  margin-top: 22rpx;
+  color: #34423c;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.empty-text,
+.list-footer {
+  margin-top: 10rpx;
+  color: #77827d;
+  font-size: 23rpx;
+}
+
+.list-footer {
+  padding: 18rpx 0 8rpx;
+  text-align: center;
+}

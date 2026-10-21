@@ -1,0 +1,155 @@
+<view wx:if="{{restaurant}}" class="page detail-page">
+  <view class="hero tone-{{restaurant.coverTone}} {{restaurant.coverUrl ? 'has-cover' : ''}}">
+    <image wx:if="{{restaurant.coverUrl}}" class="hero-cover" src="{{restaurant.coverUrl}}" mode="aspectFill"></image>
+    <view wx:if="{{restaurant.coverUrl}}" class="hero-shade"></view>
+    <view class="hero-content">
+      <view class="hero-top">
+        <view class="category-pill">{{restaurant.icon}} {{restaurant.category}}</view>
+        <view class="hero-actions">
+          <view class="preference-pill preference-{{restaurant.preference}}">
+            {{restaurant.preferenceInfo.icon}} {{restaurant.preferenceInfo.label}}
+          </view>
+          <view
+            wx:if="{{canWrite}}"
+            class="favorite-button {{favorited ? 'active' : ''}} {{favoriteSaving ? 'disabled' : ''}}"
+            bindtap="toggleFavorite"
+            hover-class="favorite-hover"
+          >{{favorited ? '♥' : '♡'}}</view>
+        </view>
+      </view>
+      <view wx:if="{{!restaurant.coverUrl}}" class="hero-icon">{{restaurant.icon}}</view>
+      <view class="hero-title">{{restaurant.name}}</view>
+      <view class="hero-meta">{{restaurant.cuisine || '吃喝记录'}}</view>
+    </view>
+  </view>
+
+  <view class="summary-card card">
+    <view class="summary-item">
+      <view class="summary-value">{{restaurant.visitCount}}</view>
+      <view class="summary-label">消费次数</view>
+    </view>
+    <view class="summary-divider"></view>
+    <view class="summary-item wide">
+      <view class="summary-value money-value">{{restaurant.totalSpentText}}</view>
+      <view class="summary-label">累计消费</view>
+    </view>
+  </view>
+
+  <view class="memory-card card">
+    <view class="card-heading">
+      <view>
+        <view class="section-kicker">LAST TIME</view>
+        <view class="section-title">最近一次吃喝</view>
+      </view>
+      <view class="memory-icon">
+        <view class="meal-bowl">
+          <view class="meal-steam steam-left"></view>
+          <view class="meal-steam steam-right"></view>
+        </view>
+      </view>
+    </view>
+    <view class="memory-meta">
+      <text>{{restaurant.lastVisitedText}}</text>
+      <text class="last-amount">{{restaurant.lastAmountText}}</text>
+    </view>
+    <view class="meal-content">{{restaurant.lastMeal || '还没有记录吃喝内容'}}</view>
+    <view class="note-box">
+      <view class="note-label">我的备注</view>
+      <view class="note-text">{{restaurant.note || '暂时没有备注'}}</view>
+    </view>
+  </view>
+
+  <view class="history-card card">
+    <view class="history-heading">
+      <view>
+        <view class="section-kicker">FOOD LOG</view>
+        <view class="section-title">消费足迹</view>
+      </view>
+      <view class="history-count">{{restaurant.consumptions.length}} 次</view>
+    </view>
+    <view wx:if="{{restaurant.consumptions.length}}" class="history-list">
+      <view wx:for="{{restaurant.consumptions}}" wx:key="id" class="history-item">
+        <view class="history-line">
+          <view class="history-dot"></view>
+          <view class="history-tail"></view>
+        </view>
+        <view class="history-main">
+          <view class="history-meta">
+            <text>{{item.dateText}}</text>
+            <text class="history-amount">{{item.amountText}}</text>
+          </view>
+          <view wx:if="{{item.meal}}" class="history-meal">{{item.meal}}</view>
+          <view wx:if="{{item.note}}" class="history-note">{{item.note}}</view>
+        </view>
+      </view>
+    </view>
+    <view wx:else class="history-empty">还没有消费记录，第一次值得认真记下。</view>
+  </view>
+
+  <view class="info-card card">
+    <view class="section-title">店铺信息</view>
+    <view class="info-row">
+      <view class="info-label">地址</view>
+      <view class="info-value address-value">{{restaurant.address || '未记录'}}</view>
+      <view wx:if="{{restaurant.hasLocation}}" class="navigation-action" bindtap="openNavigation" hover-class="tap-feedback">导航</view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">营业时间</view>
+      <view class="info-value">{{restaurant.hours || '未记录'}}</view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">特点</view>
+      <view class="info-value">{{restaurant.tags || '未记录'}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{canWrite}}" class="action-row">
+    <button wx:if="{{canEdit}}" class="edit-button" bindtap="editRestaurant">编辑店铺</button>
+    <button class="record-button" bindtap="openConsumptionForm">＋ 记一次消费</button>
+  </view>
+  <button class="detail-share-button" open-type="share" hover-class="share-button-hover">
+    <text class="share-button-icon">↗</text>
+    <text>分享这家店</text>
+  </button>
+
+  <view wx:if="{{showConsumptionForm}}" class="consumption-mask" bindtap="closeConsumptionForm" catchtouchmove="noop">
+    <view class="consumption-sheet" catchtap="noop">
+      <view class="sheet-handle"></view>
+      <scroll-view class="consumption-scroll" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{true}}" bounces="{{true}}">
+        <view class="sheet-title">记一次消费</view>
+        <view class="sheet-subtitle">次数和累计金额会自动更新，有金额时可同步到账单</view>
+
+        <view class="sheet-row">
+          <view class="sheet-field half">
+            <view class="sheet-label">消费日期</view>
+            <picker mode="date" value="{{consumptionForm.consumedAt}}" bindchange="onConsumptionDateChange">
+              <view class="sheet-input picker-input">{{consumptionForm.consumedAt}} <text>⌄</text></view>
+            </picker>
+          </view>
+          <view class="sheet-field half">
+            <view class="sheet-label">本次消费</view>
+            <view class="sheet-input amount-input">
+              <text>¥</text>
+              <input type="digit" value="{{consumptionForm.amount}}" placeholder="选填" data-field="amount" bindinput="onConsumptionInput" />
+            </view>
+          </view>
+        </view>
+
+        <view class="sheet-field">
+          <view class="sheet-label">吃了或喝了什么</view>
+          <input class="sheet-input" value="{{consumptionForm.meal}}" placeholder="例如：拿铁、开心果可颂" data-field="meal" bindinput="onConsumptionInput" />
+        </view>
+
+        <view class="sheet-field">
+          <view class="sheet-label">备注</view>
+          <textarea class="sheet-textarea" value="{{consumptionForm.note}}" placeholder="口味、环境或下次要记得的事" data-field="note" bindinput="onConsumptionInput"></textarea>
+        </view>
+      </scroll-view>
+
+      <view class="sheet-actions">
+        <button class="sheet-cancel" bindtap="closeConsumptionForm">取消</button>
+        <button class="sheet-save" loading="{{savingConsumption}}" bindtap="saveConsumption">保存记录</button>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,140 @@
+<view class="page tab-page profile-page">
+  <view class="page-header">
+    <view class="eyebrow">PROFILE</view>
+    <view class="page-title">我的主页</view>
+    <view class="page-subtitle">收好喜欢的生活，也留下属于自己的记录。</view>
+  </view>
+
+  <view wx:if="{{!user}}" class="welcome-card card">
+    <view class="welcome-decoration"></view>
+    <view class="guest-avatar">?</view>
+    <view class="welcome-title">登录你的生活清单</view>
+    <view class="welcome-text">仅供家人和熟人使用，登录后需管理员确认身份。</view>
+    <view class="guest-feature-list">
+      <text>任务与习惯</text><text>生活与账单</text><text>吃喝与地点</text>
+    </view>
+    <view class="login-actions">
+      <button class="guest-exit-button" disabled="{{loading}}" bindtap="exitMiniProgram">暂不登录</button>
+      <button class="login-button" loading="{{loading}}" disabled="{{loading}}" bindtap="login">
+        {{loading ? '正在登录...' : '微信快捷登录'}}
+      </button>
+    </view>
+    <view class="guest-exit-hint">选择“暂不登录”将返回微信</view>
+  </view>
+
+  <block wx:else>
+    <view class="profile-card card" bindtap="openAccount" hover-class="tap-feedback">
+      <image wx:if="{{user.avatarUrl}}" class="avatar avatar-image" src="{{user.avatarUrl}}" mode="aspectFill"></image>
+      <view wx:else class="avatar" style="background: {{user.avatarColor}};">{{user.avatarEmoji}}</view>
+      <view class="profile-info">
+        <view class="profile-name">{{user.nickname}}</view>
+        <view class="profile-signature">{{user.signature}}</view>
+        <view wx:if="{{user.accessStatus !== 'approved'}}" class="access-status {{user.accessStatus}}">{{user.accessStatusText}}</view>
+      </view>
+      <view class="profile-arrow">›</view>
+    </view>
+
+    <view wx:if="{{user.accessStatus === 'approved' && canViewContentLibrary}}" class="profile-menu">
+      <view
+        class="menu-card contribution card"
+        data-url="/pages/profile/contributions"
+        bindtap="openProfilePage"
+        hover-class="tap-feedback"
+      >
+        <view class="menu-icon">创</view>
+        <view class="menu-title">我的贡献</view>
+        <view class="menu-description">查看我创建的内容</view>
+        <view class="menu-arrow">›</view>
+      </view>
+
+      <view
+        class="menu-card favorite card"
+        data-url="/pages/profile/favorites"
+        bindtap="openProfilePage"
+        hover-class="tap-feedback"
+      >
+        <view class="menu-icon">♡</view>
+        <view class="menu-title">我的收藏</view>
+        <view class="menu-description">收好喜欢的内容</view>
+        <view class="menu-arrow">›</view>
+      </view>
+    </view>
+
+    <view wx:if="{{user.accessStatus === 'approved' && billSummary}}" class="bill-summary-card card" bindtap="openBills" hover-class="tap-feedback">
+      <view class="bill-summary-heading">
+        <view class="bill-summary-title-wrap">
+          <view class="bill-summary-icon">¥</view>
+          <view>
+            <view class="bill-summary-kicker">BILL ANALYSIS</view>
+            <view class="bill-summary-title">{{billSummary.monthLabel}}消费</view>
+          </view>
+        </view>
+        <view class="bill-summary-link">消费分析 <text>›</text></view>
+      </view>
+
+      <view class="bill-summary-overview">
+        <view class="bill-expense">
+          <view class="bill-summary-label">本月支出</view>
+          <view class="bill-summary-amount"><text>¥</text>{{billSummary.expenseTotal}}</view>
+        </view>
+        <view class="bill-summary-count">
+          <text class="mini-value">{{billSummary.billCount}}</text>
+          <text class="mini-label">笔消费</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{user.accessStatus === 'approved' && review}}" class="review-card card" bindtap="openReports" hover-class="tap-feedback">
+      <view class="review-heading">
+        <view class="review-title-wrap">
+          <view class="review-icon" aria-label="生活回顾">
+            <view class="review-calendar">
+              <view class="calendar-check"></view>
+            </view>
+          </view>
+          <view>
+            <view class="review-kicker">LIFE REVIEW</view>
+            <view class="review-title">{{review.monthLabel}}生活回顾</view>
+          </view>
+        </view>
+        <view class="review-link">查看报告 <text>›</text></view>
+      </view>
+      <view class="review-summary">{{review.summary}}</view>
+      <view class="review-stats">
+        <view class="review-stat">
+          <text class="review-value">{{review.recordCount}}</text>
+          <text class="review-label">记录</text>
+        </view>
+        <view class="review-stat">
+          <text class="review-value">{{review.durationText}}</text>
+          <text class="review-label">累计时长</text>
+        </view>
+        <view class="review-stat">
+          <text class="review-value">{{review.activeDays}}</text>
+          <text class="review-label">活跃天数</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{user.accessStatus !== 'approved'}}" class="access-card card">
+      <view class="access-card-title">{{accessInfo.title}}</view>
+      <view class="access-card-text">{{accessInfo.text}}</view>
+      <view wx:if="{{user.applicationNote}}" class="access-note-preview"><text>身份备注</text>{{user.applicationNote}}</view>
+      <button wx:if="{{user.accessStatus !== 'disabled'}}" class="access-note-button" bindtap="openAccessNoteModal">{{user.applicationNote ? '修改身份备注' : '填写身份备注'}}</button>
+      <button class="access-refresh" loading="{{loading}}" disabled="{{loading}}" bindtap="refreshAccessStatus">刷新状态</button>
+    </view>
+  </block>
+
+  <view wx:if="{{showAccessNoteModal}}" class="access-note-mask" bindtap="closeAccessNoteModal">
+    <view class="access-note-panel" catchtap="noop">
+      <view class="access-note-title">告诉管理员你是谁</view>
+      <view class="access-note-tip">例如：我是小帅、点点的家人、曹延琴。备注仅用于管理员识别申请人。</view>
+      <textarea class="access-note-input" maxlength="200" value="{{accessNote}}" bindinput="onAccessNoteInput" placeholder="请输入真实称呼或与管理员的关系"/>
+      <view class="access-note-count">{{accessNote.length}} / 200</view>
+      <view class="access-note-actions">
+        <view class="access-note-cancel" bindtap="closeAccessNoteModal">稍后填写</view>
+        <view class="access-note-submit {{submittingAccessNote?'disabled':''}}" bindtap="submitAccessNote">{{submittingAccessNote?'提交中…':'提交申请'}}</view>
+      </view>
+    </view>
+  </view>
+</view>

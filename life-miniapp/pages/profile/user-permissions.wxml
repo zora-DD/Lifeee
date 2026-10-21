@@ -1,0 +1,66 @@
+<view class="page permission-page">
+  <view class="page-header">
+    <view class="eyebrow">PERMISSIONS</view>
+    <view class="page-title">配置用户权限</view>
+    <view class="page-subtitle">修改后立即生效，管理员始终拥有全部权限。</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="page-loading">
+    <view class="loading-ring"></view>
+    <text>正在读取权限</text>
+  </view>
+
+  <block wx:elif="{{user}}">
+    <view class="user-card card">
+      <image wx:if="{{user.avatarUrl}}" class="user-avatar" src="{{user.avatarUrl}}" mode="aspectFill"></image>
+      <view wx:else class="user-avatar" style="background: {{user.avatarColor}};">{{user.avatarEmoji}}</view>
+      <view class="user-copy">
+        <view class="user-name">{{user.nickname}}</view>
+        <view class="user-signature">{{user.signature}}</view>
+      </view>
+      <view class="user-status">{{user.accessStatus === 'approved' ? '已通过' : '待配置'}}</view>
+    </view>
+
+    <view class="section-heading">快捷设置</view>
+    <scroll-view class="template-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="template-list">
+        <view class="template-chip" data-template="food_place" bindtap="applyTemplate">仅吃喝地点</view>
+        <view class="template-chip" data-template="readonly" bindtap="applyTemplate">全部只读</view>
+        <view class="template-chip primary" data-template="full" bindtap="applyTemplate">全部开放</view>
+        <view class="template-chip danger" data-template="paused" bindtap="applyTemplate">暂停业务访问</view>
+      </view>
+    </scroll-view>
+
+    <view class="permission-list">
+      <view wx:for="{{modules}}" wx:for-item="moduleItem" wx:for-index="moduleIndex" wx:key="module" class="permission-card card">
+        <view class="module-heading">
+          <view class="module-icon">{{moduleItem.icon}}</view>
+          <view class="module-copy">
+            <view class="module-name">{{moduleItem.name}}</view>
+            <view class="module-description">{{moduleItem.description}}</view>
+          </view>
+        </view>
+        <view class="level-switch">
+          <view
+            wx:for="{{levelOptions}}"
+            wx:for-item="level"
+            wx:key="value"
+            class="level-option {{moduleItem.level === level.value ? 'active level-' + level.value : ''}}"
+            data-index="{{moduleIndex}}"
+            data-level="{{level.value}}"
+            bindtap="selectLevel"
+          >{{level.label}}</view>
+        </view>
+        <view class="level-note">
+          <block wx:for="{{levelOptions}}" wx:for-item="level" wx:key="value">
+            <text wx:if="{{moduleItem.level === level.value}}">{{level.note}}</text>
+          </block>
+        </view>
+      </view>
+    </view>
+
+    <button class="save-button" loading="{{saving}}" disabled="{{saving}}" bindtap="save">
+      {{approveAfterSave ? '保存权限并通过申请' : '保存权限'}}
+    </button>
+  </block>
+</view>

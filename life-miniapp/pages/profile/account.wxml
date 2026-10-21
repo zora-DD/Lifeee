@@ -1,0 +1,51 @@
+<view class="page account-page">
+  <view class="page-header">
+    <view class="eyebrow">ACCOUNT</view>
+    <view class="page-title">个人资料</view>
+    <view class="page-subtitle">查看当前登录账号与访问状态。</view>
+  </view>
+
+  <view wx:if="{{user}}">
+    <view class="identity-card card">
+      <image wx:if="{{user.avatarUrl}}" class="account-avatar avatar-image" src="{{user.avatarUrl}}" mode="aspectFill"></image>
+      <view wx:else class="account-avatar" style="background: {{user.avatarColor}};">{{user.avatarEmoji}}</view>
+      <view class="identity-name">{{user.nickname}}</view>
+      <view class="identity-signature">{{user.signature}}</view>
+      <view class="status-pill {{user.accessStatus}}">{{user.accessStatusText}}</view>
+    </view>
+
+    <view class="info-card card">
+      <view class="info-row">
+        <text class="info-label">账号状态</text>
+        <text class="info-value">{{user.accessStatusText}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">账号角色</text>
+        <text class="info-value">{{user.role === 'admin' ? '管理员' : '普通用户'}}</text>
+      </view>
+    </view>
+
+    <view
+      wx:if="{{user.role === 'admin'}}"
+      class="admin-entry card"
+      bindtap="openAccessReview"
+      hover-class="tap-feedback"
+    >
+      <view class="admin-entry-icon">权</view>
+      <view class="admin-entry-content">
+        <view class="admin-entry-title">用户与权限</view>
+        <view class="admin-entry-description">审批用户并配置各模块访问范围</view>
+      </view>
+      <view wx:if="{{pendingAccessCount}}" class="admin-entry-badge">{{pendingAccessCount > 99 ? '99+' : pendingAccessCount}}</view>
+      <view class="admin-entry-arrow">›</view>
+    </view>
+
+    <button class="logout-button" bindtap="logout">退出登录</button>
+    <view class="logout-tip">退出后可重新使用微信快捷登录，账号和数据都会保留。</view>
+  </view>
+
+  <view wx:else class="page-loading">
+    <view class="loading-ring"></view>
+    <text>正在读取账号信息</text>
+  </view>
+</view>

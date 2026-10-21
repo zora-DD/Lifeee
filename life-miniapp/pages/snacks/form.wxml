@@ -1,0 +1,18 @@
+<view class="page">
+  <view class="hero"><view class="eyebrow">SNACK CABINET</view><view class="title">{{editing?'编辑零食':'收藏一种零食'}}</view><view class="subtitle">记下喜欢的味道，也收藏那些小时候的回忆。</view></view>
+  <view class="form-card">
+    <view class="cover" bindtap="chooseImage"><image wx:if="{{previewUrl}}" src="{{previewUrl}}" mode="aspectFill"></image><view wx:else class="cover-empty">🍪<text>添加零食照片</text></view><view wx:if="{{uploading}}" class="cover-status">正在上传...</view></view>
+    <view class="image-hint">点击图片可重新选择</view>
+    <view class="field"><text>零食名称 *</text><input value="{{form.name}}" data-field="name" bindinput="input" placeholder="例如：大豫竹方便面"/></view>
+    <view class="field"><text>品牌</text><input value="{{form.brand}}" data-field="brand" bindinput="input" placeholder="例如：大豫竹、棒棒娃"/></view>
+    <view class="field"><text>购买地点</text><input value="{{form.purchasePlace}}" data-field="purchasePlace" bindinput="input" placeholder="例如：山姆、便利店、拼多多"/></view>
+    <view class="select-row">
+      <view class="field half select-field"><text>分类</text><view class="select-trigger {{showCategoryMenu?'opened':''}}" bindtap="toggleCategoryMenu"><text>{{categories[categoryIndex]}}</text><text>⌄</text></view><view wx:if="{{showCategoryMenu}}" class="select-menu"><view wx:for="{{categories}}" wx:key="*this" class="select-option {{categoryIndex===index?'selected':''}}" data-index="{{index}}" bindtap="selectCategory"><text>{{item}}</text><text wx:if="{{categoryIndex===index}}">✓</text></view></view></view>
+      <view class="field half select-field"><text>状态</text><view class="select-trigger {{showStatusMenu?'opened':''}}" bindtap="toggleStatusMenu"><text>{{statuses[statusIndex].label}}</text><text>⌄</text></view><view wx:if="{{showStatusMenu}}" class="select-menu"><view wx:for="{{statuses}}" wx:key="value" class="select-option {{statusIndex===index?'selected':''}}" data-index="{{index}}" bindtap="selectStatus"><text>{{item.label}}</text><text wx:if="{{statusIndex===index}}">✓</text></view></view></view>
+    </view>
+    <view class="field"><text>回忆标签</text><input value="{{form.memoryTag}}" data-field="memoryTag" bindinput="input" placeholder="童年味道、旅行发现、朋友推荐…"/></view>
+    <view class="field"><text>口味感受</text><textarea value="{{form.note}}" data-field="note" bindinput="input" placeholder="味道、口感，以及为什么想记住它…"/></view>
+  </view>
+  <view wx:if="{{showCategoryMenu||showStatusMenu}}" class="dropdown-mask" bindtap="closeMenus"></view>
+  <view class="save {{saving||uploading?'disabled':''}}" bindtap="save">{{saving?'保存中…':'保存零食'}}</view>
+</view>

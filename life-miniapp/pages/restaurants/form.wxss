@@ -1,0 +1,297 @@
+.form-page {
+  padding-bottom: 70rpx;
+}
+
+.cover-card {
+  position: relative;
+  height: 500rpx;
+  overflow: hidden;
+  background: #edf2ef;
+}
+
+.cover-empty {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8f1e8, #eef4f1);
+}
+
+.cover-icon {
+  display: flex;
+  width: 88rpx;
+  height: 88rpx;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+  font-size: 42rpx;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 25rpx;
+}
+
+.cover-title {
+  color: #3d4943;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.cover-hint {
+  margin-top: 8rpx;
+  color: #7e8983;
+  font-size: 22rpx;
+}
+
+.cover-image {
+  width: 100%;
+  height: 100%;
+}
+
+.cover-actions {
+  position: absolute;
+  right: 18rpx;
+  bottom: 16rpx;
+  display: flex;
+  gap: 16rpx;
+  padding: 12rpx 18rpx;
+  color: #ffffff;
+  font-size: 22rpx;
+  background: rgba(31, 39, 35, 0.58);
+  border-radius: 20rpx;
+}
+
+.remove-cover {
+  color: #ffd5d1;
+}
+
+.form-card {
+  margin-top: 24rpx;
+  padding: 32rpx;
+}
+
+.form-section-title {
+  margin-bottom: 28rpx;
+  color: #34423c;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.form-group {
+  margin-bottom: 30rpx;
+}
+
+.last-group {
+  margin-bottom: 0;
+}
+
+.form-row {
+  display: flex;
+  gap: 18rpx;
+}
+
+.half {
+  flex: 1;
+  min-width: 0;
+}
+
+.form-label {
+  margin-bottom: 13rpx;
+  color: #3c4943;
+  font-size: 25rpx;
+  font-weight: 600;
+}
+
+.form-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-label-row .form-label {
+  margin-bottom: 13rpx;
+}
+
+.location-clear {
+  margin-bottom: 13rpx;
+  color: #9b6b64;
+  font-size: 22rpx;
+}
+
+.location-picker {
+  display: flex;
+  align-items: center;
+  margin-top: 14rpx;
+  padding: 20rpx;
+  background: #eef4f1;
+  border: 1rpx solid #dce8e2;
+  border-radius: 17rpx;
+}
+
+.location-icon {
+  display: flex;
+  width: 52rpx;
+  height: 52rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: #4e765f;
+  font-size: 32rpx;
+  background: #ffffff;
+  border-radius: 16rpx;
+}
+
+.location-main {
+  min-width: 0;
+  flex: 1;
+  margin-left: 16rpx;
+}
+
+.location-title {
+  color: #405048;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.location-hint {
+  margin-top: 5rpx;
+  color: #7a8881;
+  font-size: 20rpx;
+  line-height: 1.45;
+}
+
+.location-arrow {
+  margin-left: 12rpx;
+  color: #7b9387;
+  font-size: 36rpx;
+}
+
+.required {
+  color: #c96460;
+}
+
+.form-input,
+.form-textarea,
+.picker-field {
+  box-sizing: border-box;
+  width: 100%;
+  color: #303d37;
+  font-size: 25rpx;
+  background: #f5f7f6;
+  border: 1rpx solid #dfe6e2;
+  border-radius: 17rpx;
+}
+
+.form-input,
+.picker-field {
+  height: 80rpx;
+  padding: 0 20rpx;
+}
+
+.form-input {
+  line-height: 80rpx;
+}
+
+.picker-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-textarea {
+  height: 180rpx;
+  padding: 20rpx;
+  line-height: 1.6;
+}
+
+.feature-textarea {
+  height: 150rpx;
+}
+
+.preference-selector {
+  display: flex;
+  gap: 10rpx;
+}
+
+.preference-option {
+  flex: 1;
+  padding: 16rpx 5rpx;
+  color: #727d77;
+  font-size: 22rpx;
+  text-align: center;
+  background: #f2f4f3;
+  border: 2rpx solid transparent;
+  border-radius: 15rpx;
+}
+
+.preference-option.active.preference-okay {
+  color: #5c6761;
+  background: #ecefee;
+  border-color: #bac3be;
+}
+
+.preference-option.active.preference-good {
+  color: #4f715f;
+  background: #edf3f0;
+  border-color: #a8c2b5;
+}
+
+.preference-option.active.preference-love {
+  color: #985862;
+  background: #f7ecee;
+  border-color: #d8afb5;
+}
+
+.preference-option.active.preference-must {
+  color: #925d33;
+  background: #f8eee2;
+  border-color: #d9b48c;
+}
+
+.visit-tip {
+  display: flex;
+  align-items: center;
+  margin-top: 24rpx;
+  padding: 26rpx 28rpx;
+  background: #f5f8f6;
+}
+
+.visit-tip-icon {
+  display: flex;
+  width: 58rpx;
+  height: 58rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: #557565;
+  font-size: 32rpx;
+  background: #e7f0eb;
+  border-radius: 18rpx;
+}
+
+.visit-tip > view:last-child {
+  margin-left: 18rpx;
+}
+
+.visit-tip-title {
+  color: #3b4942;
+  font-size: 25rpx;
+  font-weight: 600;
+}
+
+.visit-tip-text {
+  margin-top: 5rpx;
+  color: #75807a;
+  font-size: 22rpx;
+  line-height: 1.55;
+}
+
+.save-button {
+  margin-top: 30rpx;
+  color: #ffffff;
+  font-size: 28rpx;
+  background: #6f9785;
+  box-shadow: 0 10rpx 24rpx rgba(67, 103, 87, 0.18);
+}
+
+.save-button::after {
+  border: 0;
+}

@@ -1,0 +1,94 @@
+<view class="page form-page">
+  <view class="page-header">
+    <view class="eyebrow">FOOD MEMORY</view>
+    <view class="page-title">{{id ? '编辑店铺' : '新建吃喝地点'}}</view>
+    <view class="page-subtitle">把值得再去的味道认真记下来。</view>
+  </view>
+
+  <view class="cover-card card" bindtap="chooseCover" hover-class="tap-feedback">
+    <image wx:if="{{form.coverUrl}}" class="cover-image" src="{{form.coverUrl}}" mode="aspectFit"></image>
+    <view wx:else class="cover-empty">
+      <view class="cover-icon">{{form.icon}}</view>
+      <view>
+        <view class="cover-title">添加门店照片</view>
+        <view class="cover-hint">支持从相册选择或直接拍摄</view>
+      </view>
+    </view>
+    <view wx:if="{{form.coverUrl}}" class="cover-actions">
+      <text>点击更换</text>
+      <text class="remove-cover" catchtap="removeCover">移除</text>
+    </view>
+  </view>
+
+  <view class="form-card card">
+    <view class="form-section-title">店铺信息</view>
+    <view class="form-group">
+      <view class="form-label">店名 <text class="required">*</text></view>
+      <input class="form-input" value="{{form.name}}" placeholder="例如：巷口咖啡" data-field="name" bindinput="onInput" />
+    </view>
+
+    <view class="form-row">
+      <view class="form-group half">
+        <view class="form-label">分类</view>
+        <picker mode="selector" range="{{categories}}" range-key="label" value="{{categoryIndex}}" bindchange="onCategoryChange">
+          <view class="picker-field">{{form.icon}} {{form.category}} <text>⌄</text></view>
+        </picker>
+      </view>
+      <view class="form-group half">
+        <view class="form-label">细分类</view>
+        <input class="form-input" value="{{form.cuisine}}" placeholder="咖啡、川菜等" data-field="cuisine" bindinput="onInput" />
+      </view>
+    </view>
+
+    <view class="form-label">我的评价</view>
+    <view class="preference-selector">
+      <view
+        wx:for="{{preferences}}"
+        wx:key="value"
+        class="preference-option preference-{{item.value}} {{form.preference === item.value ? 'active' : ''}}"
+        data-value="{{item.value}}"
+        bindtap="selectPreference"
+        hover-class="tap-feedback"
+      >{{item.icon}} {{item.label}}</view>
+    </view>
+  </view>
+
+  <view class="visit-tip card">
+    <view class="visit-tip-icon">＋</view>
+    <view>
+      <view class="visit-tip-title">消费记录单独添加</view>
+      <view class="visit-tip-text">保存店铺后，在详情页记录每次消费，次数和金额会自动累计。</view>
+    </view>
+  </view>
+
+  <view class="form-card card">
+    <view class="form-section-title">其他信息</view>
+    <view class="form-group">
+      <view class="form-label-row">
+        <view class="form-label">地址</view>
+        <view wx:if="{{form.latitude && form.longitude}}" class="location-clear" bindtap="clearLocation">清除定位</view>
+      </view>
+      <input class="form-input" value="{{form.address}}" placeholder="选填" data-field="address" bindinput="onInput" />
+      <!-- 地图选点暂时停用，待申请 wx.chooseLocation 接口权限后恢复。 -->
+    </view>
+    <view class="form-group">
+      <view class="form-label">营业时间</view>
+      <input class="form-input" value="{{form.hours}}" placeholder="例如：10:00 - 22:00" data-field="hours" bindinput="onInput" />
+    </view>
+    <view class="form-group last-group">
+      <view class="form-label">特点</view>
+      <textarea
+        class="form-textarea feature-textarea"
+        value="{{form.tags}}"
+        maxlength="500"
+        placeholder="例如：鱼鲜、菜味很好、适合朋友聚餐"
+        data-field="tags"
+        bindinput="onInput"
+      ></textarea>
+    </view>
+  </view>
+
+  <button class="save-button" loading="{{saving}}" bindtap="saveRestaurant">
+    {{saving ? '保存中...' : '保存店铺'}}
+  </button>
+</view>

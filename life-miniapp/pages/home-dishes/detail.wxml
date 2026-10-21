@@ -1,0 +1,64 @@
+<view class="page" wx:if="{{dish}}">
+  <view class="cover">
+    <image wx:if="{{dish.coverUrl}}" src="{{dish.coverUrl}}" mode="aspectFill"></image>
+    <view wx:else class="cover-empty">🍳</view>
+    <view class="cover-shade">
+      <view class="detail-title-row"><view class="title">{{dish.name}}</view><view class="detail-status status-{{dish.statusInfo.value}}">{{dish.statusInfo.icon}} {{dish.statusInfo.label}}</view></view>
+      <view class="meta">{{dish.category}} · {{dish.estimatedMinutes||'-'}} 分钟 · {{dish.difficultyLabel}}</view>
+    </view>
+  </view>
+
+  <view class="stats two-columns">
+    <view><text class="stat-value">{{dish.cookCount}}</text><text>做过次数</text></view>
+    <view><text class="stat-value date-value">{{dish.lastCookedAt||'还没有'}}</text><text>最近制作</text></view>
+  </view>
+
+  <view class="card">
+    <view class="card-title"><text class="card-title-icon">🥬</text>主要配料</view>
+    <view class="content">{{dish.ingredients||'暂未记录'}}</view>
+  </view>
+
+  <view class="card">
+    <view class="card-title"><text class="card-title-icon">🍳</text>制作步骤</view>
+    <view wx:if="{{dish.stepItems.length}}" class="step-list">
+      <view wx:for="{{dish.stepItems}}" wx:for-index="stepIndex" wx:key="*this" class="step-item">
+        <text class="step-number">{{stepIndex+1}}</text>
+        <text class="step-text">{{item}}</text>
+      </view>
+    </view>
+    <view wx:else class="content empty-content">暂未记录制作步骤</view>
+  </view>
+
+  <view class="card">
+    <view class="card-title"><text class="card-title-icon">✎</text>制作心得</view>
+    <view class="content">{{dish.experience||'做过之后再补充心得吧'}}</view>
+  </view>
+
+  <view wx:if="{{dish.records.length}}" class="card">
+    <view class="card-title"><text class="card-title-icon">📅</text>制作记录</view>
+    <view wx:for="{{dish.records}}" wx:key="id" class="record">
+      <view>
+        <view class="record-date">{{item.cookedAt}}</view>
+        <view class="record-note">{{item.note||'这次没有备注'}}</view>
+      </view>
+      <view class="record-rating">{{item.rating||'-'}} 星</view>
+    </view>
+  </view>
+
+  <view wx:if="{{canWrite}}" class="actions">
+    <view class="cook" bindtap="toggleCook">今天做了</view>
+    <view class="edit" bindtap="edit">编辑</view>
+    <view class="delete" bindtap="remove">删除</view>
+  </view>
+
+  <view wx:if="{{showCook}}" class="mask" bindtap="toggleCook">
+    <view class="panel" catchtap="noop">
+      <view class="panel-title">记录这次制作</view>
+      <picker mode="date" value="{{record.cookedAt}}" bindchange="dateChange"><view class="input">日期：{{record.cookedAt}}</view></picker>
+      <input class="input" type="number" value="{{record.durationMinutes}}" data-field="durationMinutes" bindinput="input" placeholder="实际用时（分钟）"/>
+      <picker range="{{ratingOptions}}" value="{{record.rating-1}}" bindchange="ratingChange"><view class="input">本次评价：{{record.rating}} 星</view></picker>
+      <textarea class="note" value="{{record.note}}" data-field="note" bindinput="input" placeholder="这次味道如何？下次如何改进？"/>
+      <view class="panel-save" bindtap="saveCook">{{saving?'保存中…':'保存记录'}}</view>
+    </view>
+  </view>
+</view>

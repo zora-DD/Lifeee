@@ -1,0 +1,148 @@
+.contribution-page {
+  padding-bottom: 70rpx;
+}
+
+.type-filter {
+  display: flex;
+  gap: 10rpx;
+  margin-bottom: 26rpx;
+  padding: 8rpx;
+  background: #edf1ef;
+  border-radius: 22rpx;
+}
+
+.type-chip {
+  flex: 1;
+  padding: 14rpx 4rpx;
+  color: #6c7771;
+  font-size: 23rpx;
+  text-align: center;
+  border-radius: 16rpx;
+}
+
+.type-chip.active {
+  color: #456f5d;
+  font-weight: 600;
+  background: #ffffff;
+  box-shadow: 0 5rpx 14rpx rgba(48, 65, 57, 0.08);
+}
+
+.contribution-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18rpx;
+  padding: 26rpx 24rpx;
+}
+
+.item-icon {
+  display: flex;
+  width: 68rpx;
+  height: 68rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: #557565;
+  font-size: 29rpx;
+  font-weight: 700;
+  background: #edf3f0;
+  border-radius: 21rpx;
+}
+
+.item-icon.restaurant {
+  color: #8b6642;
+  background: #f6eee4;
+}
+
+.item-icon.place {
+  color: #54798b;
+  background: #eaf1f4;
+}
+
+.item-copy {
+  flex: 1;
+  min-width: 0;
+  margin-left: 20rpx;
+}
+
+.item-heading {
+  display: flex;
+  align-items: center;
+}
+
+.item-title {
+  max-width: 340rpx;
+  overflow: hidden;
+  color: #303d37;
+  font-size: 28rpx;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-type {
+  margin-left: 12rpx;
+  padding: 4rpx 10rpx;
+  color: #77827c;
+  font-size: 22rpx;
+  background: #f1f3f2;
+  border-radius: 10rpx;
+}
+
+.item-meta,
+.item-detail {
+  margin-top: 7rpx;
+  overflow: hidden;
+  color: #68736d;
+  font-size: 23rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-detail {
+  color: #89928e;
+  font-size: 22rpx;
+}
+
+.item-arrow {
+  margin-left: 12rpx;
+  color: #a4ada8;
+  font-size: 40rpx;
+}
+
+.empty-card {
+  padding: 60rpx 30rpx;
+  text-align: center;
+}
+
+.empty-icon {
+  display: flex;
+  width: 72rpx;
+  height: 72rpx;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  color: #557565;
+  font-size: 34rpx;
+  background: #edf3f0;
+  border-radius: 22rpx;
+}
+
+.empty-title {
+  margin-top: 18rpx;
+  color: #34423c;
+  font-size: 29rpx;
+  font-weight: 600;
+}
+
+.empty-text {
+  margin-top: 8rpx;
+  color: #77827d;
+  font-size: 23rpx;
+}
+
+.list-footer {
+  padding: 18rpx 0 8rpx;
+  color: #98a09c;
+  font-size: 22rpx;
+  text-align: center;
+}

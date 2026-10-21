@@ -1,0 +1,52 @@
+<view class="page details-page">
+  <view class="page-header details-header">
+    <view class="eyebrow">SPENDING DETAILS</view>
+    <view class="page-title">{{category}}明细</view>
+    <view class="page-subtitle">{{periodLabel}} · {{creatorName}}</view>
+  </view>
+
+  <view class="details-summary card">
+    <view class="summary-icon">{{categoryIcon}}</view>
+    <view class="summary-main">
+      <view class="summary-label">{{category}}支出</view>
+      <view class="summary-amount"><text>¥</text>{{totalAmount}}</view>
+    </view>
+    <view class="summary-count"><text>{{totalCount}}</text><text>笔消费</text></view>
+  </view>
+
+  <view wx:if="{{loading}}" class="page-loading"><view class="loading-ring"></view><text>正在加载消费明细</text></view>
+
+  <view wx:elif="{{errorText && !groups.length}}" class="state-card card">
+    <view class="state-icon">!</view>
+    <view class="state-title">暂时没有加载出来</view>
+    <view class="state-text">{{errorText}}</view>
+    <button class="state-button" bindtap="retry">重新加载</button>
+  </view>
+
+  <block wx:else>
+    <view wx:if="{{!groups.length}}" class="state-card card">
+      <view class="state-icon empty-icon">{{categoryIcon}}</view>
+      <view class="state-title">暂无消费明细</view>
+      <view class="state-text">这个筛选范围内还没有相关账单。</view>
+    </view>
+
+    <view wx:for="{{groups}}" wx:key="key" class="detail-day">
+      <view class="detail-day-title">{{item.label}}</view>
+      <view class="detail-list card">
+        <view wx:for="{{item.items}}" wx:for-item="bill" wx:key="id" class="detail-row">
+          <view class="detail-icon">{{categoryIcon}}</view>
+          <view class="detail-main">
+            <view class="detail-title">{{bill.title}}</view>
+            <view class="detail-meta"><text>{{bill.timeText}}</text><text>·</text><text>{{bill.creatorName}}</text></view>
+            <view wx:if="{{bill.note}}" class="detail-note">{{bill.note}}</view>
+          </view>
+          <view class="detail-amount">-¥{{bill.amountText}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{loadingMore}}" class="load-note">正在加载更多</view>
+    <view wx:elif="{{groups.length && !hasMore}}" class="load-note">已显示全部明细</view>
+    <view wx:if="{{errorText && groups.length}}" class="load-error" bindtap="retry">加载失败，点击重试</view>
+  </block>
+</view>

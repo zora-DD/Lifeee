@@ -1,0 +1,18 @@
+# 微信开发者工具的个人配置
+project.private.config.json
+Codex.local.md
+
+# 后端及本地辅助服务不属于前端仓库
+backend/
+codex-feishu-service/
+
+# Codex 临时产物与本地截图
+.codex-*
+output.png
+
+# 日志与系统临时文件
+*.log
+.DS_Store
+Thumbs.db
+# 时光相册原图和本地预览图只保留在本机，正式页面从受保护媒体服务读取。
+assets/memories/

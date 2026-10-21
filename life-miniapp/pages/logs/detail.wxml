@@ -1,0 +1,48 @@
+<view class="page log-detail-page">
+  <block wx:if="{{log}}">
+    <view class="detail-hero card">
+      <view class="hero-top">
+        <view class="record-mark">记</view>
+        <view class="hero-label">LIFE NOTE</view>
+      </view>
+      <view class="occurred-label">发生于</view>
+      <view class="occurred-time">{{log.occurredText}}</view>
+      <view class="duration-pill">◷ {{log.durationText}}</view>
+    </view>
+
+    <view class="content-card card">
+      <view class="section-title">这次做了什么</view>
+      <view class="log-content">{{log.content}}</view>
+    </view>
+
+    <view class="info-card card">
+      <view class="info-row">
+        <text class="info-label">记录人</text>
+        <text class="info-value">{{log.creatorName}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">记录时间</text>
+        <text class="info-value">{{log.createdText}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">输入方式</text>
+        <text class="info-value">{{log.inputType === 'voice' ? '语音' : '文字'}}</text>
+      </view>
+    </view>
+    <button class="detail-share-button" open-type="share" hover-class="share-button-hover">
+      <text class="share-button-icon">↗</text>
+      <text>分享这条记录</text>
+    </button>
+  </block>
+
+  <view wx:elif="{{loadError}}" class="empty-state card">
+    <view class="empty-icon">记</view>
+    <view class="empty-title">{{loadError}}</view>
+    <button class="back-button" bindtap="goBack">返回记录</button>
+  </view>
+
+  <view wx:else class="page-loading">
+    <view class="loading-ring"></view>
+    <text>正在加载记录</text>
+  </view>
+</view>

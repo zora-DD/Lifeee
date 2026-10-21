@@ -1,0 +1,88 @@
+{
+  "appid": "wx7e0a6121297a0a27",
+  "compileType": "miniprogram",
+  "libVersion": "latest",
+  "projectname": "微信小程序开发",
+  "setting": {
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "urlCheck": false,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "enhance": false,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true,
+    "ignoreDevUnusedFiles": false,
+    "ignoreUploadUnusedFiles": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
+  },
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [
+      {
+        "value": "backend",
+        "type": "folder"
+      },
+      {
+        "value": "codex-feishu-service",
+        "type": "folder"
+      },
+      {
+        "value": "tests",
+        "type": "folder"
+      },
+      {
+        "value": "assets/memories",
+        "type": "folder"
+      },
+      {
+        "value": ".git",
+        "type": "folder"
+      },
+      {
+        "value": ".gitignore",
+        "type": "file"
+      },
+      {
+        "value": ".codex-er-model.mmd",
+        "type": "file"
+      },
+      {
+        "value": ".codex-er-model.png",
+        "type": "file"
+      },
+      {
+        "value": ".codex-er-model-v2.mmd",
+        "type": "file"
+      },
+      {
+        "value": ".codex-er-model-v2.png",
+        "type": "file"
+      },
+      {
+        "value": ".codex-product-document.md",
+        "type": "file"
+      },
+      {
+        "value": "output.png",
+        "type": "file"
+      }
+    ],
+    "include": []
+  },
+  "editorSetting": {}
+}

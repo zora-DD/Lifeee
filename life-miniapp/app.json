@@ -1,0 +1,75 @@
+{
+  "pages": [
+    "pages/tasks/index",
+    "pages/tasks/calendar",
+    "pages/tasks/routines",
+    "pages/logs/index",
+    "pages/logs/detail",
+    "pages/tasks/detail",
+    "pages/tasks/form",
+    "pages/restaurants/index",
+    "pages/places/index",
+    "pages/index/index",
+    "pages/memories/index",
+    "pages/memories/form",
+    "pages/profile/account",
+    "pages/profile/access-review",
+    "pages/profile/user-permissions",
+    "pages/profile/contributions",
+    "pages/profile/favorites",
+    "pages/profile/reports",
+    "pages/profile/bill-analysis",
+    "pages/profile/bill-details",
+    "pages/restaurants/detail",
+    "pages/restaurants/form",
+    "pages/home-dishes/detail",
+    "pages/home-dishes/form",
+    "pages/snacks/detail",
+    "pages/snacks/form",
+    "pages/places/detail",
+    "pages/places/form"
+  ],
+  "window": {
+    "navigationBarTitleText": "生活清单",
+    "navigationBarBackgroundColor": "#f6f8f7",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f6f8f7"
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "permission": {
+    "scope.record": {
+      "desc": "用于语音创建任务、生活记录和账单"
+    }
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#7f8984",
+    "selectedColor": "#416f5d",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/tasks/index",
+        "text": "任务"
+      },
+      {
+        "pagePath": "pages/logs/index",
+        "text": "记录"
+      },
+      {
+        "pagePath": "pages/restaurants/index",
+        "text": "吃喝"
+      },
+      {
+        "pagePath": "pages/places/index",
+        "text": "地点"
+      },
+      {
+        "pagePath": "pages/index/index",
+        "text": "主页"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

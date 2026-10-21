@@ -1,0 +1,97 @@
+<view wx:if="{{place}}" class="page detail-page">
+  <view class="hero tone-{{place.coverTone}} {{place.coverUrl ? 'has-cover' : ''}}">
+    <image wx:if="{{place.coverUrl}}" class="hero-cover" src="{{place.coverUrl}}" mode="aspectFill"></image>
+    <view wx:if="{{place.coverUrl}}" class="hero-shade"></view>
+    <view class="hero-content">
+      <view class="hero-top">
+        <view class="category-pill">{{place.icon}} {{place.category}}</view>
+        <view class="hero-actions">
+          <view class="status-pill {{place.visited ? 'visited' : 'wishlist'}}">
+            {{place.visited ? '✓ 去过' : '＋ 想去'}}
+          </view>
+          <view
+            wx:if="{{canWrite}}"
+            class="favorite-button {{favorited ? 'active' : ''}} {{favoriteSaving ? 'disabled' : ''}}"
+            bindtap="toggleFavorite"
+            hover-class="favorite-hover"
+          >{{favorited ? '♥' : '♡'}}</view>
+        </view>
+      </view>
+      <view wx:if="{{!place.coverUrl}}" class="hero-icon">{{place.icon}}</view>
+      <view class="hero-title">{{place.name}}</view>
+      <view class="hero-meta">{{place.bestTime || '适合时间待补充'}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{place.visited}}" class="summary-card card">
+    <view class="summary-item">
+      <view class="summary-value">{{place.visitCount}}</view>
+      <view class="summary-label">去过次数</view>
+    </view>
+    <view class="summary-divider"></view>
+    <view class="summary-item wide">
+      <view class="summary-value date-value">{{place.lastVisitedText}}</view>
+      <view class="summary-label">上次到访</view>
+    </view>
+  </view>
+
+  <view wx:else class="wishlist-card card">
+    <view class="wishlist-icon">＋</view>
+    <view>
+      <view class="wishlist-title">还没去过</view>
+      <view class="wishlist-text">已经收进想去清单，留给下一次出发。</view>
+    </view>
+  </view>
+
+  <view class="travel-card card">
+    <view class="travel-header">
+      <view class="travel-icon">🚗</view>
+      <view>
+        <view class="section-title travel-title">出行参考</view>
+        <view class="travel-subtitle">目前以上海为起点</view>
+      </view>
+    </view>
+    <view class="travel-row">
+      <view class="travel-label">参考距离</view>
+      <view class="travel-value">{{place.distanceText}}</view>
+    </view>
+    <view class="travel-row">
+      <view class="travel-label">自驾时间</view>
+      <view class="travel-value">{{place.driveDurationText}}</view>
+    </view>
+    <view class="travel-row">
+      <view class="travel-label">推荐时间</view>
+      <view class="travel-value">{{place.bestTime || '待补充'}}</view>
+    </view>
+  </view>
+
+  <view class="feature-card card">
+    <view class="section-kicker">FEATURE</view>
+    <view class="section-title">这里有什么特色</view>
+    <view class="feature-text">{{place.feature}}</view>
+    <view class="note-box">
+      <view class="note-label">我的备注</view>
+      <view class="note-text">{{place.note || '暂时没有备注'}}</view>
+    </view>
+  </view>
+
+  <view class="info-card card">
+    <view class="section-title">地点信息</view>
+    <view class="info-row">
+      <view class="info-label">地点</view>
+      <view class="info-value">{{place.address || '未记录'}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{place.guideUrl}}" class="guide-card card" bindtap="openGuideArticle" hover-class="guide-card-hover">
+    <view class="guide-icon">阅</view>
+    <view class="guide-content">
+      <view class="guide-kicker">TRAVEL GUIDE</view>
+      <view class="guide-title">查看原文攻略</view>
+      <view class="guide-note">微信公众号文章 · 点击阅读路线详情</view>
+    </view>
+    <view class="guide-arrow">›</view>
+  </view>
+
+  <button wx:if="{{canEdit}}" class="edit-button" bindtap="editPlace">编辑地点记录</button>
+</view>

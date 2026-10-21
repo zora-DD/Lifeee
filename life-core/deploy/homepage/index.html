@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Life Core，用心记录生活中的任务、吃喝、地点与每个值得记住的时刻。">
+  <title>Life Core · 记录生活</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --green: #3f806a;
+      --green-dark: #245b4a;
+      --green-soft: #e7f3ed;
+      --paper: rgba(255, 255, 255, 0.82);
+      --text: #21332d;
+      --muted: #708078;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      min-height: 100dvh;
+      flex-direction: column;
+      overflow-x: hidden;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(196, 229, 211, 0.72), transparent 30%),
+        radial-gradient(circle at 86% 72%, rgba(222, 239, 218, 0.7), transparent 34%),
+        linear-gradient(145deg, #f6fbf8 0%, #edf6f0 100%);
+    }
+
+    body::before,
+    body::after {
+      position: fixed;
+      z-index: -1;
+      width: 260px;
+      height: 260px;
+      border: 1px solid rgba(63, 128, 106, 0.08);
+      border-radius: 50%;
+      content: "";
+    }
+
+    body::before {
+      top: -110px;
+      right: -70px;
+    }
+
+    body::after {
+      bottom: -150px;
+      left: -80px;
+      width: 330px;
+      height: 330px;
+    }
+
+    main {
+      display: grid;
+      flex: 1;
+      place-items: center;
+      width: min(100% - 40px, 720px);
+      margin: 0 auto;
+      padding: 56px 0 32px;
+    }
+
+    .card {
+      width: 100%;
+      padding: clamp(38px, 7vw, 66px) clamp(28px, 7vw, 64px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 32px;
+      background: var(--paper);
+      box-shadow: 0 24px 70px rgba(48, 91, 74, 0.12);
+      text-align: center;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .logo {
+      display: grid;
+      width: 78px;
+      height: 78px;
+      margin: 0 auto 24px;
+      border-radius: 24px;
+      place-items: center;
+      color: #fff;
+      background: linear-gradient(145deg, #6aa88f, #36735f);
+      box-shadow: 0 14px 30px rgba(63, 128, 106, 0.25);
+      font-size: 38px;
+      line-height: 1;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--green-dark);
+      font-size: clamp(34px, 7vw, 52px);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .subtitle {
+      margin: 14px 0 0;
+      color: var(--green);
+      font-size: 18px;
+      letter-spacing: 0.14em;
+    }
+
+    .description {
+      max-width: 460px;
+      margin: 30px auto 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.9;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .tag {
+      padding: 9px 15px;
+      border-radius: 999px;
+      color: var(--green-dark);
+      background: var(--green-soft);
+      font-size: 14px;
+    }
+
+    footer {
+      padding: 16px 20px calc(22px + env(safe-area-inset-bottom));
+      color: #829088;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    footer a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    footer a:hover {
+      color: var(--green-dark);
+    }
+
+    @media (max-width: 520px) {
+      main {
+        width: min(100% - 28px, 720px);
+        padding-top: 28px;
+      }
+
+      .card {
+        border-radius: 26px;
+      }
+
+      .description {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="card" aria-labelledby="page-title">
+      <div class="logo" aria-hidden="true">叶</div>
+      <h1 id="page-title">Life Core</h1>
+      <p class="subtitle">认真生活，随心记录</p>
+      <p class="description">
+        收藏日常里的任务、吃喝、地点与珍贵时光，<br>
+        让每一段生活都有迹可循。
+      </p>
+      <div class="tags" aria-label="主要功能">
+        <span class="tag">任务</span>
+        <span class="tag">吃喝</span>
+        <span class="tag">地点</span>
+        <span class="tag">生活记录</span>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">
+      沪ICP备2026045519号-2
+    </a>
+  </footer>
+</body>
+</html>

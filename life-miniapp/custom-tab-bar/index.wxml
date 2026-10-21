@@ -1,0 +1,19 @@
+<view wx:if="{{!hidden}}" class="tab-shell">
+  <view class="tab-bar">
+    <view
+      wx:for="{{list}}"
+      wx:key="pagePath"
+      class="tab-item {{selected === item.index ? 'active' : ''}}"
+      data-index="{{item.index}}"
+      data-path="{{item.pagePath}}"
+      bindtap="switchTab"
+      hover-class="tab-pressed"
+      hover-stay-time="80"
+    >
+      <view class="tab-icon">
+        <view class="tab-glyph icon-{{item.key}}"></view>
+      </view>
+      <view class="tab-text">{{item.text}}</view>
+    </view>
+  </view>
+</view>

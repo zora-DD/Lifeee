@@ -1,0 +1,300 @@
+<view class="page tab-page">
+  <block wx:if="{{authChecked && loggedIn}}">
+  <view class="page-header">
+    <view class="eyebrow">EAT &amp; DRINK</view>
+    <view class="page-title">吃喝收藏</view>
+    <view class="page-subtitle">记住吃过、喝过的喜欢，也解决今天吃什么。</view>
+  </view>
+
+  <view class="food-mode-switch">
+    <view class="food-mode {{viewMode==='outside'?'active':''}}" data-mode="outside" bindtap="switchFoodMode">外面吃</view>
+    <view class="food-mode {{viewMode==='home'?'active home':''}}" data-mode="home" bindtap="switchFoodMode">家里做</view>
+    <view class="food-mode {{viewMode==='snack'?'active snack':''}}" data-mode="snack" bindtap="switchFoodMode">零食柜</view>
+  </view>
+
+  <block wx:if="{{viewMode === 'outside'}}">
+
+  <view class="recommend-card card">
+    <view class="recommend-copy">
+      <view class="recommend-kicker">不知道吃什么？</view>
+      <view class="recommend-title">让今天有点期待</view>
+      <view class="recommend-note">结合喜好、消费频率和距上次时间智能推荐</view>
+    </view>
+    <view class="recommend-button" bindtap="recommendRestaurant" hover-class="tap-feedback">
+      <text class="dice">✦</text>
+      <text>随机一下</text>
+    </view>
+  </view>
+
+  <view class="overview-card card">
+    <view class="overview-item">
+      <view class="overview-value">{{totalCount}}</view>
+      <view class="overview-label">收藏店铺</view>
+    </view>
+    <view class="overview-item">
+      <view class="overview-value visits">{{totalVisitCount}}</view>
+      <view class="overview-label">消费次数</view>
+    </view>
+    <view class="overview-item">
+      <view class="overview-value spent">{{totalSpentText}}</view>
+      <view class="overview-label">累计消费</view>
+    </view>
+  </view>
+
+  <view class="list-heading">
+    <text>餐厅记录</text>
+    <view class="list-filters">
+      <picker
+        class="category-picker"
+        mode="selector"
+        range="{{visitStatuses}}"
+        range-key="label"
+        value="{{statusIndex}}"
+        bindchange="onStatusChange"
+      >
+        <view class="picker-value compact">
+          <text>{{selectedStatusLabel}}</text>
+          <text class="picker-arrow">⌄</text>
+        </view>
+      </picker>
+      <picker
+        class="category-picker"
+        mode="selector"
+        range="{{categories}}"
+        range-key="label"
+        value="{{categoryIndex}}"
+        bindchange="onCategoryChange"
+      >
+        <view class="picker-value compact">
+          <text>{{selectedCategoryLabel}}</text>
+          <text class="picker-arrow">⌄</text>
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <view
+    wx:for="{{restaurants}}"
+    wx:key="id"
+    class="restaurant-card card"
+    data-id="{{item.id}}"
+    bindtap="openDetail"
+    hover-class="tap-feedback"
+  >
+    <view class="restaurant-icon tone-{{item.coverTone}}">
+      <image wx:if="{{item.coverUrl}}" class="restaurant-cover" src="{{item.coverUrl}}" mode="aspectFill"></image>
+      <text wx:else>{{item.icon}}</text>
+    </view>
+    <view class="restaurant-main">
+      <view class="row">
+        <view class="name">{{item.name}}</view>
+        <view class="preference-badge preference-{{item.preference}}">
+          <text class="preference-icon">{{item.preferenceInfo.icon}}</text>
+          <text class="preference-label">{{item.preferenceInfo.label}}</text>
+        </view>
+      </view>
+      <view class="meta">
+        <text class="category-tag">{{item.category}}</text>
+        <text wx:if="{{item.cuisine}}">{{item.cuisine}}</text>
+      </view>
+      <view class="visit-meta">
+        <text class="visit-status status-{{item.visitStatus.value}}">{{item.visitStatus.label}}</text>
+        <text wx:if="{{item.visitCount}}">消费 {{item.visitCount}} 次 · 累计 {{item.totalSpentText}}</text>
+        <text wx:else>还没有消费记录</text>
+      </view>
+      <view class="restaurant-note">
+        上次：{{item.lastVisitedText}}<text wx:if="{{item.lastMeal}}"> · {{item.lastMeal}}</text>
+      </view>
+    </view>
+    <view class="arrow">›</view>
+  </view>
+
+  <view wx:if="{{restaurants.length === 0}}" class="empty-card card">
+    <view class="empty-icon">吃</view>
+    <view class="empty-title">这个分类还没有餐厅</view>
+    <view class="empty-text">换个分类看看吧。</view>
+  </view>
+
+  <view wx:if="{{restaurants.length > 0}}" class="list-footer">
+    <text wx:if="{{loadingMore}}">正在加载更多…</text>
+    <text wx:elif="{{hasMore}}">继续上滑加载更多</text>
+    <text wx:else>已经到底了</text>
+  </view>
+
+  <view wx:if="{{canWrite}}" class="create-button" bindtap="createRestaurant" hover-class="tap-feedback">
+    <text class="create-plus">＋</text>
+    <text>新建店铺</text>
+  </view>
+
+  <view wx:if="{{showRecommendation}}" class="picker-mask" bindtap="closeRecommendation" catchtouchmove="noop">
+    <view class="picker-panel" catchtap="noop">
+      <view class="picker-close" bindtap="closeRecommendation">×</view>
+      <scroll-view class="picker-scroll" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{true}}" bounces="{{true}}">
+        <view class="picker-content">
+          <view class="picker-eyebrow">TODAY'S PICK</view>
+          <view class="picker-heading">今天吃什么</view>
+
+          <view class="draw-stage {{isPicking ? 'picking' : 'picked'}}">
+            <view class="draw-ring">
+              <text class="orbit-icon top">🍜</text>
+              <text class="orbit-icon right">🍢</text>
+              <text class="orbit-icon bottom">🥟</text>
+              <text class="orbit-icon left">🥤</text>
+            </view>
+            <view class="draw-center">{{rollingRestaurant ? rollingRestaurant.icon : '🍽️'}}</view>
+          </view>
+
+          <block wx:if="{{isPicking}}">
+            <view class="picking-title">正在认真挑选...</view>
+            <view class="picking-note">在 {{selectedCategoryLabel}} · {{selectedStatusLabel}} 中寻找今天的答案</view>
+          </block>
+
+          <block wx:elif="{{recommendedRestaurant}}">
+            <view class="result-kicker">本次推荐你吃</view>
+            <view class="result-name">{{recommendedRestaurant.name}}</view>
+            <view class="result-meta">
+              {{recommendedRestaurant.preferenceInfo.icon}} {{recommendedRestaurant.preferenceInfo.label}} · {{recommendedRestaurant.cuisine || recommendedRestaurant.category}}
+            </view>
+            <view class="result-summary">
+              <view class="result-stat">
+                <text class="result-stat-value">{{recommendedRestaurant.lastVisitedText}}</text>
+                <text class="result-stat-label">上次消费</text>
+              </view>
+              <view class="result-stat-divider"></view>
+              <view class="result-stat">
+                <text class="result-stat-value">{{recommendedRestaurant.visitCount}} 次</text>
+                <text class="result-stat-label">消费次数</text>
+              </view>
+            </view>
+            <view class="result-actions">
+              <view class="again-button" bindtap="startPicking">再选一次</view>
+              <view class="detail-button" bindtap="viewRecommendation">查看详情</view>
+            </view>
+          </block>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+  </block>
+
+  <block wx:elif="{{viewMode === 'home'}}">
+    <view class="home-recommend card">
+      <view><view class="home-kicker">HOME COOKING</view><view class="home-recommend-title">今天在家做一道</view><view class="home-recommend-note">很久没做、常做又喜欢的，会优先推荐</view></view>
+      <view class="home-pick-button" bindtap="recommendHomeDish">{{homePicking?'挑选中…':'帮我选'}}</view>
+    </view>
+
+    <view class="home-filter-card card">
+      <view class="home-filter-row">
+        <view class="home-filter-item">
+          <view class="home-filter-label">分类</view>
+          <view class="home-filter-trigger {{showHomeCategoryMenu?'opened':''}}" bindtap="toggleHomeCategoryMenu"><text>{{homeCategories[homeCategoryIndex]}}</text><text class="home-category-arrow">⌄</text></view>
+          <view wx:if="{{showHomeCategoryMenu}}" class="home-filter-menu home-category-menu">
+            <view wx:for="{{homeCategories}}" wx:key="*this" class="home-category-option {{homeCategoryIndex===index?'selected':''}}" data-index="{{index}}" bindtap="selectHomeCategory"><text>{{item}}</text><text wx:if="{{homeCategoryIndex===index}}">✓</text></view>
+          </view>
+        </view>
+        <view class="home-filter-item">
+          <view class="home-filter-label">状态</view>
+          <view class="home-filter-trigger {{showHomeStatusMenu?'opened':''}}" bindtap="toggleHomeStatusMenu"><text>{{homeStatuses[homeStatusIndex].label}}</text><text class="home-category-arrow">⌄</text></view>
+          <view wx:if="{{showHomeStatusMenu}}" class="home-filter-menu home-status-menu">
+            <view wx:for="{{homeStatuses}}" wx:key="value" class="home-category-option {{homeStatusIndex===index?'selected':''}}" data-index="{{index}}" bindtap="selectHomeStatus"><text>{{item.label}}</text><text wx:if="{{homeStatusIndex===index}}">✓</text></view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{showHomeCategoryMenu||showHomeStatusMenu}}" class="home-dropdown-mask" bindtap="closeHomeFilterMenus"></view>
+
+    <view class="home-list-heading"><text>家常菜记录</text><text>{{homeTotal}} 道</text></view>
+    <view wx:for="{{homeDishes}}" wx:key="id" class="home-dish-card card" data-id="{{item.id}}" bindtap="openHomeDish" hover-class="tap-feedback">
+      <view class="home-cover"><image wx:if="{{item.coverUrl}}" src="{{item.coverUrl}}" mode="aspectFill"></image><text wx:else>🍳</text></view>
+      <view class="home-main">
+        <view class="home-name-row"><view class="home-name">{{item.name}}</view><view class="home-status-badge status-{{item.statusInfo.value}}">{{item.statusInfo.icon}} {{item.statusInfo.label}}</view></view>
+        <view class="home-meta"><text>{{item.category}}</text><text>{{item.difficultyLabel}}</text><text>{{item.estimatedMinutes||'-'}} 分钟</text></view>
+        <view class="home-note">{{item.progressText}}</view>
+        <view wx:if="{{item.ingredients}}" class="home-ingredients">{{item.ingredients}}</view>
+      </view>
+      <text class="arrow">›</text>
+    </view>
+    <view wx:if="{{!homeDishes.length}}" class="empty-card card"><view class="empty-icon">🍳</view><view class="empty-title">还没有家常菜记录</view><view class="empty-text">先记下第一道在家做的菜吧。</view></view>
+    <view wx:if="{{homeDishes.length}}" class="list-footer"><text wx:if="{{homeLoadingMore}}">正在加载更多…</text><text wx:elif="{{homeHasMore}}">继续上滑加载更多</text><text wx:else>已经到底了</text></view>
+    <view wx:if="{{canWrite}}" class="create-button home-create" bindtap="createHomeDish"><text class="create-plus">＋</text><text>新增家常菜</text></view>
+
+    <view wx:if="{{showHomeRecommendation}}" class="picker-mask home-picker-mask" bindtap="closeHomeRecommendation" catchtouchmove="noop">
+      <view class="picker-panel home-picker-panel" catchtap="noop">
+        <view wx:if="{{!homePicking}}" class="picker-close" bindtap="closeHomeRecommendation">×</view>
+        <view class="picker-content home-picker-content">
+          <view class="picker-eyebrow home-picker-eyebrow">HOME COOKING</view>
+          <view class="picker-heading">今天在家做什么</view>
+
+          <view class="home-draw-stage {{homePicking ? 'picking' : 'picked'}}">
+            <view class="home-draw-ring"></view>
+            <view class="home-draw-center">{{recommendedHomeDish ? '🥘' : '🍳'}}</view>
+          </view>
+
+          <block wx:if="{{homePicking}}">
+            <view class="picking-title">正在认真挑选...</view>
+            <view class="picking-note">从 {{homeCategories[homeCategoryIndex]}} 中找一道今天适合做的菜</view>
+          </block>
+
+          <block wx:elif="{{recommendedHomeDish}}">
+            <view class="result-kicker home-result-kicker">本次推荐你做</view>
+            <view class="result-name">{{recommendedHomeDish.name}}</view>
+            <view class="result-meta">{{recommendedHomeDish.statusInfo.icon}} {{recommendedHomeDish.statusInfo.label}} · {{recommendedHomeDish.category}} · {{recommendedHomeDish.difficultyLabel}}</view>
+            <view class="result-summary home-result-summary">
+              <view class="result-stat">
+                <text class="result-stat-value">{{recommendedHomeDish.estimatedMinutes||'-'}} 分钟</text>
+                <text class="result-stat-label">预计用时</text>
+              </view>
+              <view class="result-stat-divider home-stat-divider"></view>
+              <view class="result-stat">
+                <text class="result-stat-value">{{recommendedHomeDish.cookCount}} 次</text>
+                <text class="result-stat-label">做过次数</text>
+              </view>
+            </view>
+            <view class="result-actions">
+              <view class="again-button home-again-button" bindtap="recommendHomeDish">再选一次</view>
+              <view class="detail-button home-detail-button" bindtap="viewHomeRecommendation">查看详情</view>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <block wx:else>
+    <view class="snack-recommend card">
+      <view><view class="snack-kicker">SNACK CABINET</view><view class="snack-recommend-title">今天来点什么</view><view class="snack-recommend-note">想尝鲜、常回购、很久没吃的优先出现</view></view>
+      <view class="snack-pick-button" bindtap="recommendSnack">{{snackPicking?'挑选中…':'帮我选'}}</view>
+    </view>
+
+    <view class="snack-filter-card card">
+      <view class="snack-filter-row">
+        <view class="snack-filter-item"><view class="snack-filter-label">分类</view><view class="snack-filter-trigger {{showSnackCategoryMenu?'opened':''}}" bindtap="toggleSnackCategoryMenu"><text>{{snackCategories[snackCategoryIndex]}}</text><text>⌄</text></view><view wx:if="{{showSnackCategoryMenu}}" class="snack-filter-menu"><view wx:for="{{snackCategories}}" wx:key="*this" class="snack-filter-option {{snackCategoryIndex===index?'selected':''}}" data-index="{{index}}" bindtap="selectSnackCategory"><text>{{item}}</text><text wx:if="{{snackCategoryIndex===index}}">✓</text></view></view></view>
+        <view class="snack-filter-item"><view class="snack-filter-label">状态</view><view class="snack-filter-trigger {{showSnackStatusMenu?'opened':''}}" bindtap="toggleSnackStatusMenu"><text>{{snackStatuses[snackStatusIndex].label}}</text><text>⌄</text></view><view wx:if="{{showSnackStatusMenu}}" class="snack-filter-menu"><view wx:for="{{snackStatuses}}" wx:key="value" class="snack-filter-option {{snackStatusIndex===index?'selected':''}}" data-index="{{index}}" bindtap="selectSnackStatus"><text>{{item.label}}</text><text wx:if="{{snackStatusIndex===index}}">✓</text></view></view></view>
+      </view>
+    </view>
+    <view wx:if="{{showSnackCategoryMenu||showSnackStatusMenu}}" class="home-dropdown-mask" bindtap="closeSnackFilterMenus"></view>
+
+    <view class="snack-list-heading"><text>我的零食柜</text><text>{{snackTotal}} 种</text></view>
+    <view wx:for="{{snacks}}" wx:key="id" class="snack-card card" data-id="{{item.id}}" bindtap="openSnack" hover-class="tap-feedback">
+      <view class="snack-cover"><image wx:if="{{item.coverUrl}}" src="{{item.coverUrl}}" mode="aspectFill"></image><text wx:else>🍪</text></view>
+      <view class="snack-main"><view class="snack-name-row"><view class="snack-name">{{item.name}}</view><view class="snack-status status-{{item.status}}">{{item.statusInfo.icon}} {{item.statusInfo.label}}</view></view><view class="snack-meta"><text>{{item.category}}</text><text wx:if="{{item.brand}}">{{item.brand}}</text></view><view class="snack-place">{{item.purchasePlace?'购于 '+item.purchasePlace:'还没记录购买地点'}}</view><view wx:if="{{item.memoryTag}}" class="snack-memory">✨ {{item.memoryTag}}</view></view><text class="arrow">›</text>
+    </view>
+    <view wx:if="{{!snacks.length}}" class="empty-card card"><view class="empty-icon">🍪</view><view class="empty-title">零食柜还是空的</view><view class="empty-text">把山姆零食、童年味道和想尝试的新品收藏起来吧。</view></view>
+    <view wx:if="{{snacks.length}}" class="list-footer"><text wx:if="{{snackLoadingMore}}">正在加载更多…</text><text wx:elif="{{snackHasMore}}">继续上滑加载更多</text><text wx:else>已经到底了</text></view>
+    <view wx:if="{{canWrite}}" class="create-button snack-create" bindtap="createSnack"><text class="create-plus">＋</text><text>新增零食</text></view>
+
+    <view wx:if="{{showSnackRecommendation}}" class="picker-mask snack-picker-mask" bindtap="closeSnackRecommendation" catchtouchmove="noop"><view class="picker-panel snack-picker-panel" catchtap="noop"><view wx:if="{{!snackPicking}}" class="picker-close" bindtap="closeSnackRecommendation">×</view><view class="picker-content"><view class="picker-eyebrow snack-picker-eyebrow">SNACK TIME</view><view class="picker-heading">今天来点什么</view><view class="snack-draw-stage {{snackPicking?'picking':'picked'}}"><view class="snack-draw-ring"></view><view class="snack-draw-center">{{recommendedSnack?'🍿':'🍪'}}</view></view><block wx:if="{{snackPicking}}"><view class="picking-title">正在翻零食柜...</view><view class="picking-note">从 {{snackCategories[snackCategoryIndex]}} · {{snackStatuses[snackStatusIndex].label}} 中挑选</view></block><block wx:elif="{{recommendedSnack}}"><view class="result-kicker snack-result-kicker">本次推荐</view><view class="result-name">{{recommendedSnack.name}}</view><view class="result-meta">{{recommendedSnack.statusInfo.icon}} {{recommendedSnack.statusInfo.label}} · {{recommendedSnack.category}}<text wx:if="{{recommendedSnack.brand}}"> · {{recommendedSnack.brand}}</text></view><view class="result-summary snack-result-summary"><view class="result-stat"><text class="result-stat-value">{{recommendedSnack.tastingCount}} 次</text><text class="result-stat-label">吃过次数</text></view><view class="result-stat-divider snack-stat-divider"></view><view class="result-stat"><text class="result-stat-value">{{recommendedSnack.lastTastedText}}</text><text class="result-stat-label">最近一次</text></view></view><view class="result-actions"><view class="again-button snack-again-button" bindtap="recommendSnack">再选一次</view><view class="detail-button snack-detail-button" bindtap="viewSnackRecommendation">查看详情</view></view></block></view></view></view>
+  </block>
+  </block>
+
+  <view wx:elif="{{authChecked}}" class="login-required card">
+    <view class="login-required-icon food">吃</view>
+    <view class="login-required-title">登录后查看吃喝记录</view>
+    <view class="login-required-text">登录后才能浏览店铺记录和随机推荐。</view>
+    <navigator class="login-required-button" url="/pages/index/index" open-type="switchTab">前往登录</navigator>
+  </view>
+  <view wx:else class="page-loading">
+    <view class="loading-ring"></view>
+    <text>正在检查登录状态</text>
+  </view>
+</view>

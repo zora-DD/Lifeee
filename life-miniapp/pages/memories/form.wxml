@@ -1,0 +1,51 @@
+<view class="page memory-form-page">
+  <view class="page-header">
+    <view class="eyebrow">NEW MEMORY</view>
+    <view class="page-title">添加一段时光</view>
+    <view class="page-subtitle">选好照片，再留下当时的地点和心情。</view>
+  </view>
+
+  <view class="photo-card card">
+    <view class="section-heading">
+      <view>
+        <view class="section-title">照片</view>
+        <view class="section-hint">最多 9 张，长按照片可在系统相册中继续编辑</view>
+      </view>
+      <view class="photo-count">{{photos.length}} / 9</view>
+    </view>
+
+    <view class="photo-grid">
+      <view wx:for="{{photos}}" wx:key="path" class="photo-item">
+        <image class="selected-photo" src="{{item.path}}" mode="aspectFill" data-src="{{item.path}}" bindtap="previewPhoto"></image>
+        <view class="remove-photo" data-index="{{index}}" catchtap="removePhoto">×</view>
+      </view>
+      <view wx:if="{{photos.length < 9}}" class="photo-picker" bindtap="choosePhotos" hover-class="tap-feedback">
+        <view class="picker-plus">＋</view>
+        <view>选择照片</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="form-card card">
+    <view class="form-group">
+      <view class="form-label">日期 <text class="required">*</text></view>
+      <picker mode="date" value="{{form.date}}" bindchange="onDateChange">
+        <view class="picker-field">{{form.date}} <text>⌄</text></view>
+      </picker>
+    </view>
+    <view class="form-group">
+      <view class="form-label">标题 <text class="required">*</text></view>
+      <input class="form-input" maxlength="160" value="{{form.title}}" placeholder="这一刻发生了什么" data-field="title" bindinput="onInput" />
+    </view>
+    <view class="form-group">
+      <view class="form-label">地点</view>
+      <input class="form-input" maxlength="255" value="{{form.place}}" placeholder="例如：嘉兴南北湖" data-field="place" bindinput="onInput" />
+    </view>
+    <view class="form-group last-group">
+      <view class="form-label">想说的话</view>
+      <textarea class="form-textarea" maxlength="1000" value="{{form.description}}" placeholder="记录当时的心情，选填" data-field="description" bindinput="onInput"></textarea>
+    </view>
+  </view>
+
+  <button class="save-button" loading="{{saving}}" disabled="{{saving}}" bindtap="saveMemory">{{savingText}}</button>
+</view>

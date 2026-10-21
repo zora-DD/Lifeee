@@ -1,0 +1,1418 @@
+syntax = "proto3";
+
+package life_core;
+
+option go_package = "life-core/proto";
+
+import "google/api/annotations.proto";
+
+message HealthRequest {}
+
+message HealthResponse {
+  string status = 1;
+}
+
+message WechatLoginRequest {
+  string code = 1;
+}
+
+message UserItem {
+  string id = 1;
+  string nickname = 2;
+  string avatar_url = 3;
+  string avatar_emoji = 4;
+  string avatar_color = 5;
+  string signature = 6;
+  string access_status = 7;
+  string role = 8;
+  string created_at = 9;
+  string application_note = 10;
+}
+
+message WechatLoginResponse {
+  string access_token = 1;
+  string expires_at = 2;
+  UserItem user = 3;
+}
+
+message GetCurrentUserRequest {}
+
+message GetAccessStatusRequest {}
+message ApplyAccessRequest { string note = 1; }
+
+message ListAccessRequestsRequest {
+  string status = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message ListAccessRequestsResponse {
+  repeated UserItem items = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  int64 total = 4;
+  bool has_more = 5;
+}
+
+message ModifyAccessRequestRequest {
+  string user_id = 1;
+  string status = 2;
+}
+
+message ModulePermissionItem {
+  string module = 1;
+  string level = 2;
+}
+
+message GetMyPermissionsRequest {}
+
+message GetMyPermissionsResponse {
+  repeated ModulePermissionItem permissions = 1;
+}
+
+message GetUserPermissionsRequest {
+  string user_id = 1;
+}
+
+message GetUserPermissionsResponse {
+  UserItem user = 1;
+  repeated ModulePermissionItem permissions = 2;
+}
+
+message ModifyUserPermissionsRequest {
+  string user_id = 1;
+  repeated ModulePermissionItem permissions = 2;
+}
+
+message ContentSummary {
+  string target_id = 1;
+  string target_type = 2;
+  string title = 3;
+  string category = 4;
+  string status = 5;
+  string priority = 6;
+  string due_at = 7;
+  string icon = 8;
+  bool visited = 9;
+  uint32 visit_count = 10;
+  string total_spent = 11;
+  string cover_url = 12;
+  string created_at = 13;
+}
+
+message ListContributionsRequest {
+  string target_type = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message ListContributionsResponse {
+  repeated ContentSummary items = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  int64 total = 4;
+  bool has_more = 5;
+}
+
+message ListFavoritesRequest {
+  string target_type = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message FavoriteItem {
+  string id = 1;
+  ContentSummary target = 2;
+  string created_at = 3;
+}
+
+message ListFavoritesResponse {
+  repeated FavoriteItem items = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  int64 total = 4;
+  bool has_more = 5;
+}
+
+message GetFavoriteStatusRequest {
+  string target_type = 1;
+  string target_id = 2;
+}
+
+message ModifyFavoriteRequest {
+  string target_type = 1;
+  string target_id = 2;
+  bool favorited = 3;
+}
+
+message FavoriteStatusResponse {
+  string target_type = 1;
+  string target_id = 2;
+  bool favorited = 3;
+}
+
+message ListTasksRequest {
+  string status = 1;
+  string priority = 2;
+  string category = 3;
+  string keyword = 4;
+  uint64 created_by = 5;
+  int32 page = 6;
+  int32 page_size = 7;
+  string due_from = 8;
+  string due_to = 9;
+}
+
+message TaskItem {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string status = 4;
+  string priority = 5;
+  string category = 6;
+  string due_at = 7;
+  string created_by = 8;
+  string created_at = 9;
+  string updated_at = 10;
+  TaskCreator creator = 11;
+}
+
+message TaskCreator {
+  string id = 1;
+  string nickname = 2;
+  string avatar_emoji = 3;
+  string avatar_color = 4;
+}
+
+message ListTasksResponse {
+  repeated TaskItem items = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  int64 total = 4;
+  bool has_more = 5;
+  int64 overall_total = 6;
+  int64 todo_count = 7;
+  int64 done_count = 8;
+}
+
+message GetTaskRequest {
+  string id = 1;
+}
+
+message CreateTaskRequest {
+  string title = 1;
+  string description = 2;
+  string priority = 3;
+  string category = 4;
+  string due_at = 5;
+}
+
+message UpdateTaskRequest {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string priority = 4;
+  string category = 5;
+  string due_at = 6;
+}
+
+message UpdateTaskStatusRequest {
+  string id = 1;
+  string status = 2;
+}
+
+message DeleteTaskRequest {
+  string id = 1;
+}
+
+message DeleteTaskResponse {
+  bool deleted = 1;
+}
+
+message RecognizeTaskVoiceRequest {
+  string audio_base64 = 1;
+  string voice_format = 2;
+}
+
+message RecognizeTaskVoiceResponse {
+  string raw_text = 1;
+  string title = 2;
+  string description = 3;
+  string category = 4;
+  int64 audio_duration_ms = 5;
+  string asr_request_id = 6;
+}
+
+message GetTaskAISummaryRequest {
+  bool refresh = 1;
+}
+
+message TaskSummaryFocusItem {
+  string id = 1;
+  string title = 2;
+  string priority = 3;
+  string due_at = 4;
+  string reason = 5;
+}
+
+message TaskAISummaryResponse {
+  string date = 1;
+  int32 todo_count = 2;
+  int32 done_today_count = 3;
+  int32 overdue_count = 4;
+  int32 due_today_count = 5;
+  int32 upcoming_count = 6;
+  int32 high_priority_count = 7;
+  repeated TaskSummaryFocusItem focus_tasks = 8;
+  string summary = 9;
+  repeated string suggestions = 10;
+  string generated_at = 11;
+  bool cached = 12;
+  bool ai_generated = 13;
+}
+
+message DailyRoutineDay {
+  string date = 1;
+  bool completed = 2;
+  string checked_at = 3;
+  bool scheduled = 4;
+}
+
+message DailyRoutineItem {
+  string id = 1;
+  string title = 2;
+  string time_of_day = 3;
+  bool enabled = 4;
+  bool checked_today = 5;
+  string checked_at = 6;
+  repeated DailyRoutineDay history = 7;
+  string created_at = 8;
+  string updated_at = 9;
+  int32 current_streak = 10;
+  int32 total_checkins = 11;
+  int32 last_seven_day_rate = 12;
+  repeated DailyRoutineDay month_history = 13;
+  string repeat_unit = 14;
+  int32 repeat_interval = 15;
+  string start_date = 16;
+  bool scheduled_today = 17;
+}
+
+message ListDailyRoutinesRequest {
+  string date = 1;
+  bool include_disabled = 2;
+}
+
+message ListDailyRoutinesResponse {
+  repeated DailyRoutineItem items = 1;
+  string date = 2;
+}
+
+message CreateDailyRoutineRequest {
+  string title = 1;
+  string time_of_day = 2;
+  string repeat_unit = 3;
+  int32 repeat_interval = 4;
+  string start_date = 5;
+}
+
+message UpdateDailyRoutineRequest {
+  string id = 1;
+  string title = 2;
+  string time_of_day = 3;
+  bool enabled = 4;
+  string repeat_unit = 5;
+  int32 repeat_interval = 6;
+  string start_date = 7;
+}
+
+message DeleteDailyRoutineRequest {
+  string id = 1;
+}
+
+message DeleteDailyRoutineResponse {
+  bool deleted = 1;
+}
+
+message CheckinDailyRoutineRequest {
+  string id = 1;
+  string date = 2;
+  bool completed = 3;
+}
+
+message ListActivityLogsRequest {
+  string from = 1;
+  string to = 2;
+  string input_type = 3;
+  uint64 created_by = 4;
+  int32 page = 5;
+  int32 page_size = 6;
+}
+
+message ActivityLogItem {
+  string id = 1;
+  string content = 2;
+  string occurred_at = 3;
+  int32 duration_minutes = 4;
+  string input_type = 5;
+  string audio_url = 6;
+  string created_by = 7;
+  string created_at = 8;
+  string updated_at = 9;
+  ActivityLogCreator creator = 10;
+}
+
+message ListActivityLogsResponse {
+  repeated ActivityLogItem items = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  int64 total = 4;
+  bool has_more = 5;
+}
+
+message GetActivityLogRequest {
+  string id = 1;
+}
+
+message CreateActivityLogRequest {
+  string content = 1;
+  string occurred_at = 2;
+  int32 duration_minutes = 3;
+  string input_type = 4;
+  string audio_url = 5;
+}
+
+message UpdateActivityLogRequest {
+  string id = 1;
+  string content = 2;
+  string occurred_at = 3;
+  int32 duration_minutes = 4;
+  string input_type = 5;
+  string audio_url = 6;
+}
+
+message DeleteActivityLogRequest {
+  string id = 1;
+}
+
+message DeleteActivityLogResponse {
+  bool deleted = 1;
+}
+
+message ActivityLogStatsRequest {
+  string scope = 1;
+  int32 year = 2;
+  int32 month = 3;
+  uint64 created_by = 4;
+}
+
+message ActivityLogDailyBreakdown {
+  string key = 1;
+  string label = 2;
+  int32 record_count = 3;
+  int32 minutes = 4;
+}
+
+message ActivityLogMonthlyBreakdown {
+  int32 month = 1;
+  string label = 2;
+  int32 record_count = 3;
+  int32 minutes = 4;
+}
+
+message ActivityLogStatsResponse {
+  int32 record_count = 1;
+  int32 active_days = 2;
+  int32 total_minutes = 3;
+  int32 duration_record_count = 4;
+  int32 average_minutes = 5;
+  int32 longest_minutes = 6;
+  repeated ActivityLogDailyBreakdown daily_breakdown = 7;
+  repeated ActivityLogMonthlyBreakdown monthly_breakdown = 8;
+}
+
+message RecognizeActivityVoiceRequest {
+  string audio_base64 = 1;
+  string voice_format = 2;
+}
+
+message RecognizeActivityVoiceResponse {
+  string raw_text = 1;
+  string content = 2;
+  string occurred_at = 3;
+  int32 duration_minutes = 4;
+  int64 audio_duration_ms = 5;
+  string asr_request_id = 6;
+}
+
+message BillCreator {
+  string id = 1;
+  string nickname = 2;
+  string avatar_emoji = 3;
+  string avatar_color = 4;
+}
+
+message BillItem {
+  string id = 1;
+  string type = 2;
+  string title = 3;
+  string amount = 4;
+  string category = 5;
+  string occurred_at = 6;
+  string note = 7;
+  string input_type = 8;
+  string raw_text = 9;
+  string created_by = 10;
+  BillCreator creator = 11;
+  string created_at = 12;
+  string updated_at = 13;
+}
+
+message ListBillsRequest {
+  string type = 1;
+  string category = 2;
+  string keyword = 3;
+  uint64 created_by = 4;
+  string from = 5;
+  string to = 6;
+  int32 page = 7;
+  int32 page_size = 8;
+}
+
+message ListBillsResponse {
+  repeated BillItem items = 1;
+  repeated BillCreator creators = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+  int64 total = 5;
+  bool has_more = 6;
+}
+
+message GetBillRequest {
+  string id = 1;
+}
+
+message CreateBillRequest {
+  string type = 1;
+  string title = 2;
+  string amount = 3;
+  string category = 4;
+  string occurred_at = 5;
+  string note = 6;
+  string input_type = 7;
+  string raw_text = 8;
+}
+
+message UpdateBillRequest {
+  string id = 1;
+  string type = 2;
+  string title = 3;
+  string amount = 4;
+  string category = 5;
+  string occurred_at = 6;
+  string note = 7;
+  string input_type = 8;
+  string raw_text = 9;
+}
+
+message DeleteBillRequest {
+  string id = 1;
+}
+
+message DeleteBillResponse {
+  bool deleted = 1;
+}
+
+message BillCategoryStat {
+  string category = 1;
+  string amount = 2;
+  int32 count = 3;
+}
+
+message BillStatsRequest {
+  int32 year = 1;
+  int32 month = 2;
+  uint64 created_by = 3;
+  string scope = 4;
+}
+
+message BillMonthlyStat {
+  int32 month = 1;
+  string label = 2;
+  string expense_amount = 3;
+  string income_amount = 4;
+  int32 count = 5;
+}
+
+message BillUserStat {
+  BillCreator user = 1;
+  string expense_amount = 2;
+  string income_amount = 3;
+  int32 count = 4;
+}
+
+message BillStatsResponse {
+  string expense_total = 1;
+  string income_total = 2;
+  int32 bill_count = 3;
+  repeated BillCategoryStat categories = 4;
+  repeated BillMonthlyStat monthly = 5;
+  repeated BillUserStat users = 6;
+  string scope = 7;
+  int32 year = 8;
+  int32 month = 9;
+}
+
+message ActivityLogDraft {
+  string content = 1;
+  string occurred_at = 2;
+  int32 duration_minutes = 3;
+}
+
+message BillDraft {
+  string type = 1;
+  string title = 2;
+  string amount = 3;
+  string category = 4;
+  string occurred_at = 5;
+  string note = 6;
+}
+
+message ParseQuickRecordRequest {
+  string text = 1;
+}
+
+message RecognizeQuickRecordVoiceRequest {
+  string audio_base64 = 1;
+  string voice_format = 2;
+}
+
+message QuickRecordDraftResponse {
+  string intent = 1;
+  string raw_text = 2;
+  ActivityLogDraft activity = 3;
+  repeated BillDraft bills = 4;
+  int64 audio_duration_ms = 5;
+  string asr_request_id = 6;
+}
+
+message GetLifeAISummaryRequest {
+  string scope = 1;
+  int32 year = 2;
+  int32 month = 3;
+  bool refresh = 4;
+}
+
+message LifeAISummaryResponse {
+  string scope = 1;
+  int32 year = 2;
+  int32 month = 3;
+  string period_label = 4;
+  int32 task_created_count = 5;
+  int32 task_done_count = 6;
+  int32 activity_count = 7;
+  int32 activity_minutes = 8;
+  int32 bill_count = 9;
+  string expense_total = 10;
+  int32 restaurant_visit_count = 11;
+  int32 visited_place_count = 12;
+  string summary = 13;
+  repeated string highlights = 14;
+  repeated string suggestions = 15;
+  string generated_at = 16;
+  bool cached = 17;
+  bool ai_generated = 18;
+}
+
+message ListRestaurantsRequest {
+  string category = 1;
+  string preference = 2;
+  string keyword = 3;
+  uint64 created_by = 4;
+  int32 page = 5;
+  int32 page_size = 6;
+  string status = 7;
+}
+
+message RestaurantConsumptionItem {
+  string id = 1;
+  string restaurant_id = 2;
+  string consumed_by = 3;
+  string consumed_at = 4;
+  string amount = 5;
+  string meal = 6;
+  string note = 7;
+  string created_at = 8;
+  string updated_at = 9;
+}
+
+message RestaurantItem {
+  string id = 1;
+  string name = 2;
+  string category = 3;
+  string cuisine = 4;
+  string preference = 5;
+  string address = 6;
+  string business_hours = 7;
+  string cover_url = 8;
+  string cover_object_key = 9;
+  uint32 visit_count = 10;
+  string total_spent = 11;
+  string last_visited_at = 12;
+  string last_amount = 13;
+  string last_meal = 14;
+  string last_note = 15;
+  string created_by = 16;
+  string created_at = 17;
+  string updated_at = 18;
+  repeated RestaurantConsumptionItem consumptions = 19;
+  string features = 20;
+  string latitude = 21;
+  string longitude = 22;
+}
+
+message ListRestaurantsResponse {
+  repeated RestaurantItem items = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  int64 total = 4;
+  bool has_more = 5;
+  int64 overall_total = 6;
+  int64 total_visit_count = 7;
+  string total_spent = 8;
+}
+
+message GetRestaurantRequest {
+  string id = 1;
+}
+
+message CreateRestaurantRequest {
+  string name = 1;
+  string category = 2;
+  string cuisine = 3;
+  string preference = 4;
+  string address = 5;
+  string business_hours = 6;
+  string cover_url = 7;
+  string cover_object_key = 8;
+  string features = 9;
+  string latitude = 10;
+  string longitude = 11;
+}
+
+message UpdateRestaurantRequest {
+  string id = 1;
+  string name = 2;
+  string category = 3;
+  string cuisine = 4;
+  string preference = 5;
+  string address = 6;
+  string business_hours = 7;
+  string cover_url = 8;
+  string cover_object_key = 9;
+  string features = 10;
+  string latitude = 11;
+  string longitude = 12;
+}
+
+message DeleteRestaurantRequest {
+  string id = 1;
+}
+
+message DeleteRestaurantResponse {
+  bool deleted = 1;
+}
+
+message RecommendRestaurantRequest {
+  string category = 1;
+  string preference = 2;
+  string status = 3;
+}
+
+message ListRestaurantConsumptionsRequest {
+  string restaurant_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message ListRestaurantConsumptionsResponse {
+  repeated RestaurantConsumptionItem items = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  int64 total = 4;
+  bool has_more = 5;
+}
+
+message CreateRestaurantConsumptionRequest {
+  string restaurant_id = 1;
+  string consumed_at = 2;
+  string amount = 3;
+  string meal = 4;
+  string note = 5;
+}
+
+message UpdateRestaurantConsumptionRequest {
+  string restaurant_id = 1;
+  string id = 2;
+  string consumed_at = 3;
+  string amount = 4;
+  string meal = 5;
+  string note = 6;
+}
+
+message DeleteRestaurantConsumptionRequest {
+  string restaurant_id = 1;
+  string id = 2;
+}
+
+message DeleteRestaurantConsumptionResponse {
+  bool deleted = 1;
+}
+
+message HomeCookingRecordItem {
+  string id = 1;
+  string dish_id = 2;
+  string cooked_by = 3;
+  string cooked_at = 4;
+  uint32 duration_minutes = 5;
+  uint32 rating = 6;
+  string note = 7;
+  string photo_url = 8;
+  string photo_object_key = 9;
+  string created_at = 10;
+}
+
+message HomeDishItem {
+  string id = 1;
+  string name = 2;
+  string category = 3;
+  string ingredients = 4;
+  string difficulty = 5;
+  uint32 estimated_minutes = 6;
+  string cover_url = 7;
+  string cover_object_key = 8;
+  string experience = 9;
+  uint32 rating = 10;
+  uint32 cook_count = 11;
+  string last_cooked_at = 12;
+  string created_by = 13;
+  string created_at = 14;
+  string updated_at = 15;
+  repeated HomeCookingRecordItem records = 16;
+  string steps = 17;
+  string status = 18;
+}
+
+message ListHomeDishesRequest { string category=1; string difficulty=2; int32 max_minutes=3; string keyword=4; int32 page=5; int32 page_size=6; string status=7; }
+message ListHomeDishesResponse { repeated HomeDishItem items=1; int32 page=2; int32 page_size=3; int64 total=4; bool has_more=5; }
+message GetHomeDishRequest { string id=1; }
+message CreateHomeDishRequest { string name=1; string category=2; string ingredients=3; string difficulty=4; uint32 estimated_minutes=5; string cover_url=6; string cover_object_key=7; string experience=8; uint32 rating=9; string steps=10; }
+message UpdateHomeDishRequest { string id=1; string name=2; string category=3; string ingredients=4; string difficulty=5; uint32 estimated_minutes=6; string cover_url=7; string cover_object_key=8; string experience=9; uint32 rating=10; string steps=11; }
+message DeleteHomeDishRequest { string id=1; }
+message DeleteHomeDishResponse { bool deleted=1; }
+message CookHomeDishRequest { string dish_id=1; string cooked_at=2; uint32 duration_minutes=3; uint32 rating=4; string note=5; string photo_url=6; string photo_object_key=7; }
+message RecommendHomeDishRequest { string category=1; string difficulty=2; int32 max_minutes=3; string ingredients=4; string status=5; }
+
+message SnackTastingRecordItem {
+  string id = 1;
+  string snack_id = 2;
+  string tasted_by = 3;
+  string tasted_at = 4;
+  string note = 5;
+  string created_at = 6;
+}
+
+message SnackItem {
+  string id = 1;
+  string name = 2;
+  string brand = 3;
+  string purchase_place = 4;
+  string category = 5;
+  string status = 6;
+  string cover_url = 7;
+  string cover_object_key = 8;
+  string note = 9;
+  string memory_tag = 10;
+  uint32 tasting_count = 11;
+  string last_tasted_at = 12;
+  string created_by = 13;
+  string created_at = 14;
+  string updated_at = 15;
+  repeated SnackTastingRecordItem records = 16;
+}
+
+message ListSnacksRequest { string category=1; string status=2; string keyword=3; int32 page=4; int32 page_size=5; }
+message ListSnacksResponse { repeated SnackItem items=1; int32 page=2; int32 page_size=3; int64 total=4; bool has_more=5; }
+message GetSnackRequest { string id=1; }
+message CreateSnackRequest { string name=1; string brand=2; string purchase_place=3; string category=4; string status=5; string cover_url=6; string cover_object_key=7; string note=8; string memory_tag=9; }
+message UpdateSnackRequest { string id=1; string name=2; string brand=3; string purchase_place=4; string category=5; string status=6; string cover_url=7; string cover_object_key=8; string note=9; string memory_tag=10; }
+message DeleteSnackRequest { string id=1; }
+message DeleteSnackResponse { bool deleted=1; }
+message TasteSnackRequest { string snack_id=1; string tasted_at=2; string note=3; }
+message RecommendSnackRequest { string category=1; string status=2; }
+message ListPlacesRequest {
+  string category = 1;
+  string status = 2;
+  string keyword = 3;
+  uint64 created_by = 4;
+  int32 page = 5;
+  int32 page_size = 6;
+}
+
+message PlaceItem {
+  string id = 1;
+  string name = 2;
+  string category = 3;
+  string icon = 4;
+  bool visited = 5;
+  uint32 visit_count = 6;
+  string last_visited_at = 7;
+  string feature = 8;
+  string note = 9;
+  string address = 10;
+  string best_time = 11;
+  string cover_url = 12;
+  string cover_object_key = 13;
+  string latitude = 14;
+  string longitude = 15;
+  string created_by = 16;
+  string created_at = 17;
+  string updated_at = 18;
+  string guide_url = 19;
+  uint32 distance_km = 20;
+  uint32 drive_duration_minutes = 21;
+}
+
+message ListPlacesResponse {
+  repeated PlaceItem items = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  int64 total = 4;
+  bool has_more = 5;
+  int64 overall_total = 6;
+  int64 visited_count = 7;
+  int64 wishlist_count = 8;
+}
+
+message GetPlaceRequest {
+  string id = 1;
+}
+
+message CreatePlaceRequest {
+  string name = 1;
+  string category = 2;
+  string icon = 3;
+  bool visited = 4;
+  uint32 visit_count = 5;
+  string last_visited_at = 6;
+  string feature = 7;
+  string note = 8;
+  string address = 9;
+  string best_time = 10;
+  string cover_url = 11;
+  string cover_object_key = 12;
+  string latitude = 13;
+  string longitude = 14;
+  string guide_url = 15;
+  uint32 distance_km = 16;
+  uint32 drive_duration_minutes = 17;
+}
+
+message UpdatePlaceRequest {
+  string id = 1;
+  string name = 2;
+  string category = 3;
+  string icon = 4;
+  bool visited = 5;
+  uint32 visit_count = 6;
+  string last_visited_at = 7;
+  string feature = 8;
+  string note = 9;
+  string address = 10;
+  string best_time = 11;
+  string cover_url = 12;
+  string cover_object_key = 13;
+  string latitude = 14;
+  string longitude = 15;
+  string guide_url = 16;
+  uint32 distance_km = 17;
+  uint32 drive_duration_minutes = 18;
+}
+
+message DeletePlaceRequest {
+  string id = 1;
+}
+
+message DeletePlaceResponse {
+  bool deleted = 1;
+}
+
+message ActivityLogCreator {
+  string id = 1;
+  string nickname = 2;
+  string avatar_emoji = 3;
+  string avatar_color = 4;
+}
+
+message MemoryPhotoInput {
+  string media_id = 1;
+  string object_key = 2;
+  uint32 width = 3;
+  uint32 height = 4;
+  string alt_text = 5;
+}
+
+message MemoryPhotoItem {
+  string id = 1;
+  string media_id = 2;
+  string object_key = 3;
+  string url = 4;
+  uint32 width = 5;
+  uint32 height = 6;
+  string alt_text = 7;
+  uint32 sort_order = 8;
+}
+
+message MemoryItem {
+  string id = 1;
+  string date = 2;
+  string date_precision = 3;
+  string place = 4;
+  string title = 5;
+  string description = 6;
+  repeated MemoryPhotoItem images = 7;
+  string created_by = 8;
+  string created_at = 9;
+  string updated_at = 10;
+}
+
+message ListMemoriesRequest {
+  int32 year = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message ListMemoriesResponse {
+  repeated MemoryItem items = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  int64 total = 4;
+  bool has_more = 5;
+  repeated int32 years = 6;
+}
+
+message CreateMemoryRequest {
+  string date = 1;
+  string place = 2;
+  string title = 3;
+  string description = 4;
+  repeated MemoryPhotoInput images = 5;
+  string source_key = 6;
+}
+
+service LifeCoreService {
+  rpc Health(HealthRequest) returns (HealthResponse) {
+    option (google.api.http) = {
+      get: "/v1/life-core/health"
+    };
+  }
+
+  rpc WechatLogin(WechatLoginRequest) returns (WechatLoginResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/auth/login"
+      body: "*"
+    };
+  }
+
+  rpc GetCurrentUser(GetCurrentUserRequest) returns (UserItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/user/current"
+      body: "*"
+    };
+  }
+
+  rpc GetAccessStatus(GetAccessStatusRequest) returns (UserItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/access/status"
+      body: "*"
+    };
+  }
+
+  rpc ApplyAccess(ApplyAccessRequest) returns (UserItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/access/apply"
+      body: "*"
+    };
+  }
+
+  rpc ListAccessRequests(ListAccessRequestsRequest) returns (ListAccessRequestsResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/admin/access_request/list"
+      body: "*"
+    };
+  }
+
+  rpc ModifyAccessRequest(ModifyAccessRequestRequest) returns (UserItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/admin/access_request/modify"
+      body: "*"
+    };
+  }
+
+  rpc GetMyPermissions(GetMyPermissionsRequest) returns (GetMyPermissionsResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/user/permission/list"
+      body: "*"
+    };
+  }
+
+  rpc GetUserPermissions(GetUserPermissionsRequest) returns (GetUserPermissionsResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/admin/user_permission/detail"
+      body: "*"
+    };
+  }
+
+  rpc ModifyUserPermissions(ModifyUserPermissionsRequest) returns (GetUserPermissionsResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/admin/user_permission/modify"
+      body: "*"
+    };
+  }
+
+  rpc ListContributions(ListContributionsRequest) returns (ListContributionsResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/user/contribution/list"
+      body: "*"
+    };
+  }
+
+  rpc ListFavorites(ListFavoritesRequest) returns (ListFavoritesResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/favorite/list"
+      body: "*"
+    };
+  }
+
+  rpc GetFavoriteStatus(GetFavoriteStatusRequest) returns (FavoriteStatusResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/favorite/status"
+      body: "*"
+    };
+  }
+
+  rpc ModifyFavorite(ModifyFavoriteRequest) returns (FavoriteStatusResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/favorite/modify"
+      body: "*"
+    };
+  }
+
+  rpc ListTasks(ListTasksRequest) returns (ListTasksResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/task/list"
+      body: "*"
+    };
+  }
+
+  rpc GetTask(GetTaskRequest) returns (TaskItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/task/detail"
+      body: "*"
+    };
+  }
+  rpc CreateTask(CreateTaskRequest) returns (TaskItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/task/create"
+      body: "*"
+    };
+  }
+  rpc UpdateTask(UpdateTaskRequest) returns (TaskItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/task/modify"
+      body: "*"
+    };
+  }
+  rpc UpdateTaskStatus(UpdateTaskStatusRequest) returns (TaskItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/task/status/modify"
+      body: "*"
+    };
+  }
+  rpc DeleteTask(DeleteTaskRequest) returns (DeleteTaskResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/task/delete"
+      body: "*"
+    };
+  }
+  rpc RecognizeTaskVoice(RecognizeTaskVoiceRequest) returns (RecognizeTaskVoiceResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/task/voice/recognize"
+      body: "*"
+    };
+  }
+
+  rpc GetTaskAISummary(GetTaskAISummaryRequest) returns (TaskAISummaryResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/task/ai_summary"
+      body: "*"
+    };
+  }
+
+  rpc ListDailyRoutines(ListDailyRoutinesRequest) returns (ListDailyRoutinesResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/task/routine/list"
+      body: "*"
+    };
+  }
+
+  rpc CreateDailyRoutine(CreateDailyRoutineRequest) returns (DailyRoutineItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/task/routine/create"
+      body: "*"
+    };
+  }
+
+  rpc UpdateDailyRoutine(UpdateDailyRoutineRequest) returns (DailyRoutineItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/task/routine/modify"
+      body: "*"
+    };
+  }
+
+  rpc DeleteDailyRoutine(DeleteDailyRoutineRequest) returns (DeleteDailyRoutineResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/task/routine/delete"
+      body: "*"
+    };
+  }
+
+  rpc CheckinDailyRoutine(CheckinDailyRoutineRequest) returns (DailyRoutineItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/task/routine/checkin"
+      body: "*"
+    };
+  }
+
+  rpc ListActivityLogs(ListActivityLogsRequest) returns (ListActivityLogsResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/activity_log/list"
+      body: "*"
+    };
+  }
+
+  rpc GetActivityLog(GetActivityLogRequest) returns (ActivityLogItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/activity_log/detail"
+      body: "*"
+    };
+  }
+  rpc CreateActivityLog(CreateActivityLogRequest) returns (ActivityLogItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/activity_log/create"
+      body: "*"
+    };
+  }
+  rpc UpdateActivityLog(UpdateActivityLogRequest) returns (ActivityLogItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/activity_log/modify"
+      body: "*"
+    };
+  }
+  rpc DeleteActivityLog(DeleteActivityLogRequest) returns (DeleteActivityLogResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/activity_log/delete"
+      body: "*"
+    };
+  }
+
+  rpc GetActivityLogStats(ActivityLogStatsRequest) returns (ActivityLogStatsResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/activity_log/stats"
+      body: "*"
+    };
+  }
+
+  rpc RecognizeActivityVoice(RecognizeActivityVoiceRequest) returns (RecognizeActivityVoiceResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/activity_log/voice/recognize"
+      body: "*"
+    };
+  }
+
+  rpc ListBills(ListBillsRequest) returns (ListBillsResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/bill/list"
+      body: "*"
+    };
+  }
+  rpc GetBill(GetBillRequest) returns (BillItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/bill/detail"
+      body: "*"
+    };
+  }
+  rpc CreateBill(CreateBillRequest) returns (BillItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/bill/create"
+      body: "*"
+    };
+  }
+  rpc UpdateBill(UpdateBillRequest) returns (BillItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/bill/modify"
+      body: "*"
+    };
+  }
+  rpc DeleteBill(DeleteBillRequest) returns (DeleteBillResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/bill/delete"
+      body: "*"
+    };
+  }
+  rpc GetBillStats(BillStatsRequest) returns (BillStatsResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/bill/stats"
+      body: "*"
+    };
+  }
+  rpc ParseQuickRecord(ParseQuickRecordRequest) returns (QuickRecordDraftResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/record/parse"
+      body: "*"
+    };
+  }
+  rpc RecognizeQuickRecordVoice(RecognizeQuickRecordVoiceRequest) returns (QuickRecordDraftResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/record/voice/recognize"
+      body: "*"
+    };
+  }
+
+
+  rpc GetLifeAISummary(GetLifeAISummaryRequest) returns (LifeAISummaryResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/report/life_summary"
+      body: "*"
+    };
+  }
+
+  rpc ListRestaurants(ListRestaurantsRequest) returns (ListRestaurantsResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/restaurant/list"
+      body: "*"
+    };
+  }
+  rpc GetRestaurant(GetRestaurantRequest) returns (RestaurantItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/restaurant/detail"
+      body: "*"
+    };
+  }
+  rpc CreateRestaurant(CreateRestaurantRequest) returns (RestaurantItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/restaurant/create"
+      body: "*"
+    };
+  }
+  rpc UpdateRestaurant(UpdateRestaurantRequest) returns (RestaurantItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/restaurant/modify"
+      body: "*"
+    };
+  }
+  rpc DeleteRestaurant(DeleteRestaurantRequest) returns (DeleteRestaurantResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/restaurant/delete"
+      body: "*"
+    };
+  }
+  rpc RecommendRestaurant(RecommendRestaurantRequest) returns (RestaurantItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/restaurant/recommend"
+      body: "*"
+    };
+  }
+  rpc ListRestaurantConsumptions(ListRestaurantConsumptionsRequest) returns (ListRestaurantConsumptionsResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/restaurant/consumption/list"
+      body: "*"
+    };
+  }
+  rpc CreateRestaurantConsumption(CreateRestaurantConsumptionRequest) returns (RestaurantConsumptionItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/restaurant/consumption/create"
+      body: "*"
+    };
+  }
+  rpc UpdateRestaurantConsumption(UpdateRestaurantConsumptionRequest) returns (RestaurantConsumptionItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/restaurant/consumption/modify"
+      body: "*"
+    };
+  }
+  rpc DeleteRestaurantConsumption(DeleteRestaurantConsumptionRequest) returns (DeleteRestaurantConsumptionResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/restaurant/consumption/delete"
+      body: "*"
+    };
+  }
+
+  rpc ListHomeDishes(ListHomeDishesRequest) returns (ListHomeDishesResponse) { option (google.api.http)={post:"/v1/life-core/restaurant/home/list" body:"*"}; }
+  rpc GetHomeDish(GetHomeDishRequest) returns (HomeDishItem) { option (google.api.http)={post:"/v1/life-core/restaurant/home/detail" body:"*"}; }
+  rpc CreateHomeDish(CreateHomeDishRequest) returns (HomeDishItem) { option (google.api.http)={post:"/v1/life-core/restaurant/home/create" body:"*"}; }
+  rpc UpdateHomeDish(UpdateHomeDishRequest) returns (HomeDishItem) { option (google.api.http)={post:"/v1/life-core/restaurant/home/modify" body:"*"}; }
+  rpc DeleteHomeDish(DeleteHomeDishRequest) returns (DeleteHomeDishResponse) { option (google.api.http)={post:"/v1/life-core/restaurant/home/delete" body:"*"}; }
+  rpc CookHomeDish(CookHomeDishRequest) returns (HomeDishItem) { option (google.api.http)={post:"/v1/life-core/restaurant/home/cook" body:"*"}; }
+  rpc RecommendHomeDish(RecommendHomeDishRequest) returns (HomeDishItem) { option (google.api.http)={post:"/v1/life-core/restaurant/home/recommend" body:"*"}; }
+  rpc ListSnacks(ListSnacksRequest) returns (ListSnacksResponse) { option (google.api.http)={post:"/v1/life-core/restaurant/snack/list" body:"*"}; }
+  rpc GetSnack(GetSnackRequest) returns (SnackItem) { option (google.api.http)={post:"/v1/life-core/restaurant/snack/detail" body:"*"}; }
+  rpc CreateSnack(CreateSnackRequest) returns (SnackItem) { option (google.api.http)={post:"/v1/life-core/restaurant/snack/create" body:"*"}; }
+  rpc UpdateSnack(UpdateSnackRequest) returns (SnackItem) { option (google.api.http)={post:"/v1/life-core/restaurant/snack/modify" body:"*"}; }
+  rpc DeleteSnack(DeleteSnackRequest) returns (DeleteSnackResponse) { option (google.api.http)={post:"/v1/life-core/restaurant/snack/delete" body:"*"}; }
+  rpc TasteSnack(TasteSnackRequest) returns (SnackItem) { option (google.api.http)={post:"/v1/life-core/restaurant/snack/taste" body:"*"}; }
+  rpc RecommendSnack(RecommendSnackRequest) returns (SnackItem) { option (google.api.http)={post:"/v1/life-core/restaurant/snack/recommend" body:"*"}; }
+  rpc ListPlaces(ListPlacesRequest) returns (ListPlacesResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/place/list"
+      body: "*"
+    };
+  }
+  rpc GetPlace(GetPlaceRequest) returns (PlaceItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/place/detail"
+      body: "*"
+    };
+  }
+  rpc CreatePlace(CreatePlaceRequest) returns (PlaceItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/place/create"
+      body: "*"
+    };
+  }
+  rpc UpdatePlace(UpdatePlaceRequest) returns (PlaceItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/place/modify"
+      body: "*"
+    };
+  }
+  rpc DeletePlace(DeletePlaceRequest) returns (DeletePlaceResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/place/delete"
+      body: "*"
+    };
+  }
+
+  rpc ListMemories(ListMemoriesRequest) returns (ListMemoriesResponse) {
+    option (google.api.http) = {
+      post: "/v1/life-core/memory/list"
+      body: "*"
+    };
+  }
+  rpc CreateMemory(CreateMemoryRequest) returns (MemoryItem) {
+    option (google.api.http) = {
+      post: "/v1/life-core/memory/create"
+      body: "*"
+    };
+  }
+}
