@@ -1,6 +1,7 @@
 # 默认忽略仓库根目录下所有内容，只放行明确要上传的目录。
 /*
 !/.gitignore
+!/README.md
 !/.vscode/
 !/.vscode/**
 !/life-core/
