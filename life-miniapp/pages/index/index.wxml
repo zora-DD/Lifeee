@@ -128,7 +128,7 @@
   <view wx:if="{{showAccessNoteModal}}" class="access-note-mask" bindtap="closeAccessNoteModal">
     <view class="access-note-panel" catchtap="noop">
       <view class="access-note-title">告诉管理员你是谁</view>
-      <view class="access-note-tip">例如：我是小帅、点点的家人、曹延琴。备注仅用于管理员识别申请人。</view>
+      <view class="access-note-tip">例如：我是若姐、若姐的朋友。备注仅用于管理员识别申请人。</view>
       <textarea class="access-note-input" maxlength="200" value="{{accessNote}}" bindinput="onAccessNoteInput" placeholder="请输入真实称呼或与管理员的关系"/>
       <view class="access-note-count">{{accessNote.length}} / 200</view>
       <view class="access-note-actions">

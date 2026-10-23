@@ -70,12 +70,12 @@ func TestAccessServiceApply(t *testing.T) {
 		svc := NewAccessService(new(gorm.DB), repository)
 		ctx := authctx.WithUser(context.Background(), &repository.users[0])
 
-		response, err := svc.Apply(ctx, &proto.ApplyAccessRequest{Note: "我是小帅，点点的家人"})
+		response, err := svc.Apply(ctx, &proto.ApplyAccessRequest{Note: "我是若姐，若姐的朋友"})
 
 		So(err, ShouldBeNil)
 		So(repository.updatedUserID, ShouldEqual, uint64(8))
-		So(repository.updatedNote, ShouldEqual, "我是小帅，点点的家人")
-		So(response.ApplicationNote, ShouldEqual, "我是小帅，点点的家人")
+		So(repository.updatedNote, ShouldEqual, "我是若姐，若姐的朋友")
+		So(response.ApplicationNote, ShouldEqual, "我是若姐，若姐的朋友")
 	})
 
 	Convey("身份备注不能为空或超过长度限制", t, func() {

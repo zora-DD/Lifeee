@@ -1,6 +1,6 @@
 // 可临时指定 'local' 或 'prod'；留空时按微信当前小程序版本自动选择。
 // develop 环境走本机后端，trial/release 和非微信测试环境走 HTTPS 生产域名。
-const ENV_OVERRIDE = ''
+const ENV_OVERRIDE = 'prod'
 
 function getWeChatEnvVersion() {
   if (typeof wx === 'undefined' || typeof wx.getAccountInfoSync !== 'function') return ''
