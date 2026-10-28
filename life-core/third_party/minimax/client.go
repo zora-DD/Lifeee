@@ -129,11 +129,11 @@ func (c *MiniMaxClient) OrganizeQuickRecord(ctx context.Context, rawText string,
 4. category 只能是：餐饮、交通、购物、生活缴费、宠物、娱乐、医疗、住房、收入、其他。
 5. 没有明确时间时使用当前时间；没有明确时长时 duration_minutes 为 0。
 6. 标题简短清楚，原句中的额外信息放 note。`, now.Format(time.RFC3339))
-	content, err := c.complete(ctx, prompt, rawText)
+	content, err := c.complete(ctx, prompt, rawText) //ai整理
 	if err != nil {
 		return nil, err
 	}
-	return parseQuickRecordDraft(content, now)
+	return parseQuickRecordDraft(content, now) //文本处理+校验
 }
 
 // SummarizeTasks 根据服务端已经计算好的事实生成当天任务建议。
@@ -176,6 +176,7 @@ func (c *MiniMaxClient) SummarizeLife(ctx context.Context, facts LifeSummaryFact
 	return parseSummaryDraft(content, true)
 }
 
+// complete 发送请求到 MiniMax API 并解析响应。
 func (c *MiniMaxClient) complete(ctx context.Context, systemPrompt, rawText string) (string, error) {
 	payload := messagesRequest{
 		Model:       c.model,

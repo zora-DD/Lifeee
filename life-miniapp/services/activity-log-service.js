@@ -26,7 +26,7 @@ function createSeedLogs() {
 
   return [{
     id: 'seed-daily-log',
-    content: '收拾客厅，给猫猫喂罐头，收叠衣服，倒掉客厅和卫生间垃圾，叠被子，洗水果。',
+    content: '收拾客厅，洗澡，收叠衣服，倒掉客厅和卫生间垃圾，叠被子，洗水果。',
     occurredAt: occurredAt.toISOString(),
     durationMinutes: 45,
     inputType: 'text',

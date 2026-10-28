@@ -31,6 +31,7 @@ func NewQuickRecordService(recognizer SpeechRecognizer, organizer QuickRecordOrg
 	return &QuickRecordService{recognizer: recognizer, organizer: organizer, maxAudioBytes: maxAudioBytes, now: time.Now}
 }
 
+// 文本版
 func (s *QuickRecordService) Parse(ctx context.Context, req *proto.ParseQuickRecordRequest) (*proto.QuickRecordDraftResponse, error) {
 	if req == nil {
 		return nil, fmt.Errorf("%w: nil request", hecode.ErrInvalidParam)
@@ -45,6 +46,7 @@ func (s *QuickRecordService) Parse(ctx context.Context, req *proto.ParseQuickRec
 	return s.organize(ctx, text, 0, "")
 }
 
+// 语音版
 func (s *QuickRecordService) Recognize(ctx context.Context, req *proto.RecognizeQuickRecordVoiceRequest) (*proto.QuickRecordDraftResponse, error) {
 	if req == nil {
 		return nil, fmt.Errorf("%w: nil request", hecode.ErrInvalidParam)
@@ -80,6 +82,7 @@ func (s *QuickRecordService) Recognize(ctx context.Context, req *proto.Recognize
 	return s.organize(ctx, recognition.Text, recognition.AudioDurationMS, recognition.RequestID)
 }
 
+// ai整理功能
 func (s *QuickRecordService) organize(ctx context.Context, rawText string, durationMS int64, requestID string) (*proto.QuickRecordDraftResponse, error) {
 	draft, err := s.organizer.OrganizeQuickRecord(ctx, rawText, s.now())
 	if err != nil {

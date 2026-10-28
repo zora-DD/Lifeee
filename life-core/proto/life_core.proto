@@ -1013,278 +1013,278 @@ message CreateMemoryRequest {
 service LifeCoreService {
   rpc Health(HealthRequest) returns (HealthResponse) {
     option (google.api.http) = {
-      get: "/v1/life-core/health"
+      get: "/v1/life-core/health" //服务健康检查
     };
   }
 
   rpc WechatLogin(WechatLoginRequest) returns (WechatLoginResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/auth/login"
+      post: "/v1/life-core/auth/login" //微信登录
       body: "*"
     };
   }
 
   rpc GetCurrentUser(GetCurrentUserRequest) returns (UserItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/user/current"
+      post: "/v1/life-core/user/current" //获取当前用户
       body: "*"
     };
   }
 
   rpc GetAccessStatus(GetAccessStatusRequest) returns (UserItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/access/status"
+      post: "/v1/life-core/access/status" //获取访问状态
       body: "*"
     };
   }
 
   rpc ApplyAccess(ApplyAccessRequest) returns (UserItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/access/apply"
+      post: "/v1/life-core/access/apply" //申请访问
       body: "*"
     };
   }
 
   rpc ListAccessRequests(ListAccessRequestsRequest) returns (ListAccessRequestsResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/admin/access_request/list"
+      post: "/v1/life-core/admin/access_request/list" //获取访问请求列表
       body: "*"
     };
   }
 
   rpc ModifyAccessRequest(ModifyAccessRequestRequest) returns (UserItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/admin/access_request/modify"
+      post: "/v1/life-core/admin/access_request/modify" //修改访问请求
       body: "*"
     };
   }
 
   rpc GetMyPermissions(GetMyPermissionsRequest) returns (GetMyPermissionsResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/user/permission/list"
+      post: "/v1/life-core/user/permission/list" //获取我的权限列表
       body: "*"
     };
   }
 
   rpc GetUserPermissions(GetUserPermissionsRequest) returns (GetUserPermissionsResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/admin/user_permission/detail"
+      post: "/v1/life-core/admin/user_permission/detail" //获取用户权限
       body: "*"
     };
   }
 
   rpc ModifyUserPermissions(ModifyUserPermissionsRequest) returns (GetUserPermissionsResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/admin/user_permission/modify"
+      post: "/v1/life-core/admin/user_permission/modify" //修改用户权限
       body: "*"
     };
   }
 
   rpc ListContributions(ListContributionsRequest) returns (ListContributionsResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/user/contribution/list"
+      post: "/v1/life-core/user/contribution/list" //获取贡献列表
       body: "*"
     };
   }
 
   rpc ListFavorites(ListFavoritesRequest) returns (ListFavoritesResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/favorite/list"
+      post: "/v1/life-core/favorite/list" //获取收藏列表    
       body: "*"
     };
   }
 
   rpc GetFavoriteStatus(GetFavoriteStatusRequest) returns (FavoriteStatusResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/favorite/status"
+      post: "/v1/life-core/favorite/status" //获取收藏状态
       body: "*"
     };
   }
 
   rpc ModifyFavorite(ModifyFavoriteRequest) returns (FavoriteStatusResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/favorite/modify"
+      post: "/v1/life-core/favorite/modify" //修改收藏
       body: "*"
     };
   }
 
   rpc ListTasks(ListTasksRequest) returns (ListTasksResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/task/list"
+      post: "/v1/life-core/task/list" //获取任务列表
       body: "*"
     };
   }
 
   rpc GetTask(GetTaskRequest) returns (TaskItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/task/detail"
+      post: "/v1/life-core/task/detail" //获取任务详情
       body: "*"
     };
   }
   rpc CreateTask(CreateTaskRequest) returns (TaskItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/task/create"
+      post: "/v1/life-core/task/create" //创建任务
       body: "*"
     };
   }
   rpc UpdateTask(UpdateTaskRequest) returns (TaskItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/task/modify"
+      post: "/v1/life-core/task/modify" //修改任务
       body: "*"
     };
   }
   rpc UpdateTaskStatus(UpdateTaskStatusRequest) returns (TaskItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/task/status/modify"
+      post: "/v1/life-core/task/status/modify" //修改任务状态
       body: "*"
     };
   }
   rpc DeleteTask(DeleteTaskRequest) returns (DeleteTaskResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/task/delete"
+      post: "/v1/life-core/task/delete" //删除任务
       body: "*"
     };
   }
   rpc RecognizeTaskVoice(RecognizeTaskVoiceRequest) returns (RecognizeTaskVoiceResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/task/voice/recognize"
+      post: "/v1/life-core/task/voice/recognize" //识别任务语音
       body: "*"
     };
   }
 
   rpc GetTaskAISummary(GetTaskAISummaryRequest) returns (TaskAISummaryResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/task/ai_summary"
+      post: "/v1/life-core/task/ai_summary" //获取任务AI摘要
       body: "*"
     };
   }
 
   rpc ListDailyRoutines(ListDailyRoutinesRequest) returns (ListDailyRoutinesResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/task/routine/list"
+      post: "/v1/life-core/task/routine/list" //获取日常习惯列表
       body: "*"
     };
   }
 
   rpc CreateDailyRoutine(CreateDailyRoutineRequest) returns (DailyRoutineItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/task/routine/create"
+      post: "/v1/life-core/task/routine/create" //创建日常习惯
       body: "*"
     };
   }
 
   rpc UpdateDailyRoutine(UpdateDailyRoutineRequest) returns (DailyRoutineItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/task/routine/modify"
+      post: "/v1/life-core/task/routine/modify" //修改日常习惯
       body: "*"
     };
   }
 
   rpc DeleteDailyRoutine(DeleteDailyRoutineRequest) returns (DeleteDailyRoutineResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/task/routine/delete"
+      post: "/v1/life-core/task/routine/delete" //删除日常习惯
       body: "*"
     };
   }
 
   rpc CheckinDailyRoutine(CheckinDailyRoutineRequest) returns (DailyRoutineItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/task/routine/checkin"
+      post: "/v1/life-core/task/routine/checkin" //打卡日常习惯
       body: "*"
     };
   }
 
   rpc ListActivityLogs(ListActivityLogsRequest) returns (ListActivityLogsResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/activity_log/list"
+      post: "/v1/life-core/activity_log/list" //获取活动日志列表
       body: "*"
     };
   }
 
   rpc GetActivityLog(GetActivityLogRequest) returns (ActivityLogItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/activity_log/detail"
+      post: "/v1/life-core/activity_log/detail" //获取活动日志详情
       body: "*"
     };
   }
   rpc CreateActivityLog(CreateActivityLogRequest) returns (ActivityLogItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/activity_log/create"
+      post: "/v1/life-core/activity_log/create" //创建活动日志
       body: "*"
     };
   }
   rpc UpdateActivityLog(UpdateActivityLogRequest) returns (ActivityLogItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/activity_log/modify"
+      post: "/v1/life-core/activity_log/modify" //修改活动日志
       body: "*"
     };
   }
   rpc DeleteActivityLog(DeleteActivityLogRequest) returns (DeleteActivityLogResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/activity_log/delete"
+      post: "/v1/life-core/activity_log/delete" //删除活动日志
       body: "*"
     };
   }
 
   rpc GetActivityLogStats(ActivityLogStatsRequest) returns (ActivityLogStatsResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/activity_log/stats"
+      post: "/v1/life-core/activity_log/stats" //获取活动日志统计
       body: "*"
     };
   }
 
   rpc RecognizeActivityVoice(RecognizeActivityVoiceRequest) returns (RecognizeActivityVoiceResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/activity_log/voice/recognize"
+      post: "/v1/life-core/activity_log/voice/recognize" //识别活动日志语音
       body: "*"
     };
   }
 
   rpc ListBills(ListBillsRequest) returns (ListBillsResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/bill/list"
+      post: "/v1/life-core/bill/list" //获取账单列表
       body: "*"
     };
   }
   rpc GetBill(GetBillRequest) returns (BillItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/bill/detail"
+      post: "/v1/life-core/bill/detail" //获取账单详情
       body: "*"
     };
   }
   rpc CreateBill(CreateBillRequest) returns (BillItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/bill/create"
+      post: "/v1/life-core/bill/create" //创建账单
       body: "*"
     };
   }
   rpc UpdateBill(UpdateBillRequest) returns (BillItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/bill/modify"
+      post: "/v1/life-core/bill/modify" //修改账单
       body: "*"
     };
   }
   rpc DeleteBill(DeleteBillRequest) returns (DeleteBillResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/bill/delete"
+      post: "/v1/life-core/bill/delete" //删除账单
       body: "*"
     };
   }
   rpc GetBillStats(BillStatsRequest) returns (BillStatsResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/bill/stats"
+      post: "/v1/life-core/bill/stats" //获取账单统计
       body: "*"
     };
   }
   rpc ParseQuickRecord(ParseQuickRecordRequest) returns (QuickRecordDraftResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/record/parse"
+      post: "/v1/life-core/record/parse" //解析快速记录
       body: "*"
     };
   }
   rpc RecognizeQuickRecordVoice(RecognizeQuickRecordVoiceRequest) returns (QuickRecordDraftResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/record/voice/recognize"
+      post: "/v1/life-core/record/voice/recognize" //识别快速记录语音
       body: "*"
     };
   }
@@ -1292,68 +1292,68 @@ service LifeCoreService {
 
   rpc GetLifeAISummary(GetLifeAISummaryRequest) returns (LifeAISummaryResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/report/life_summary"
+      post: "/v1/life-core/report/life_summary" //获取生活AI摘要
       body: "*"
     };
   }
 
   rpc ListRestaurants(ListRestaurantsRequest) returns (ListRestaurantsResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/restaurant/list"
+      post: "/v1/life-core/restaurant/list" //获取餐厅列表
       body: "*"
     };
   }
   rpc GetRestaurant(GetRestaurantRequest) returns (RestaurantItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/restaurant/detail"
+      post: "/v1/life-core/restaurant/detail" //获取餐厅详情
       body: "*"
     };
   }
   rpc CreateRestaurant(CreateRestaurantRequest) returns (RestaurantItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/restaurant/create"
+      post: "/v1/life-core/restaurant/create" //创建餐厅
       body: "*"
     };
   }
   rpc UpdateRestaurant(UpdateRestaurantRequest) returns (RestaurantItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/restaurant/modify"
+      post: "/v1/life-core/restaurant/modify" //修改餐厅
       body: "*"
     };
   }
   rpc DeleteRestaurant(DeleteRestaurantRequest) returns (DeleteRestaurantResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/restaurant/delete"
+      post: "/v1/life-core/restaurant/delete" //删除餐厅
       body: "*"
     };
   }
   rpc RecommendRestaurant(RecommendRestaurantRequest) returns (RestaurantItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/restaurant/recommend"
+      post: "/v1/life-core/restaurant/recommend" //推荐餐厅
       body: "*"
     };
   }
   rpc ListRestaurantConsumptions(ListRestaurantConsumptionsRequest) returns (ListRestaurantConsumptionsResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/restaurant/consumption/list"
+      post: "/v1/life-core/restaurant/consumption/list" //获取餐厅消费列表
       body: "*"
     };
   }
   rpc CreateRestaurantConsumption(CreateRestaurantConsumptionRequest) returns (RestaurantConsumptionItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/restaurant/consumption/create"
+      post: "/v1/life-core/restaurant/consumption/create" //创建餐厅消费
       body: "*"
     };
   }
   rpc UpdateRestaurantConsumption(UpdateRestaurantConsumptionRequest) returns (RestaurantConsumptionItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/restaurant/consumption/modify"
+      post: "/v1/life-core/restaurant/consumption/modify" //修改餐厅消费
       body: "*"
     };
   }
   rpc DeleteRestaurantConsumption(DeleteRestaurantConsumptionRequest) returns (DeleteRestaurantConsumptionResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/restaurant/consumption/delete"
+      post: "/v1/life-core/restaurant/consumption/delete" //删除餐厅消费
       body: "*"
     };
   }
@@ -1374,44 +1374,44 @@ service LifeCoreService {
   rpc RecommendSnack(RecommendSnackRequest) returns (SnackItem) { option (google.api.http)={post:"/v1/life-core/restaurant/snack/recommend" body:"*"}; }
   rpc ListPlaces(ListPlacesRequest) returns (ListPlacesResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/place/list"
+      post: "/v1/life-core/place/list" //获取地点列表
       body: "*"
     };
   }
   rpc GetPlace(GetPlaceRequest) returns (PlaceItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/place/detail"
+      post: "/v1/life-core/place/detail" //获取地点详情
       body: "*"
     };
   }
   rpc CreatePlace(CreatePlaceRequest) returns (PlaceItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/place/create"
+      post: "/v1/life-core/place/create" //创建地点
       body: "*"
     };
   }
   rpc UpdatePlace(UpdatePlaceRequest) returns (PlaceItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/place/modify"
+      post: "/v1/life-core/place/modify" //修改地点
       body: "*"
     };
   }
   rpc DeletePlace(DeletePlaceRequest) returns (DeletePlaceResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/place/delete"
+      post: "/v1/life-core/place/delete" //删除地点
       body: "*"
     };
   }
 
   rpc ListMemories(ListMemoriesRequest) returns (ListMemoriesResponse) {
     option (google.api.http) = {
-      post: "/v1/life-core/memory/list"
+      post: "/v1/life-core/memory/list" //获取记忆列表
       body: "*"
     };
   }
   rpc CreateMemory(CreateMemoryRequest) returns (MemoryItem) {
     option (google.api.http) = {
-      post: "/v1/life-core/memory/create"
+      post: "/v1/life-core/memory/create" //创建记忆
       body: "*"
     };
   }

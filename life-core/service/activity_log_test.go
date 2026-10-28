@@ -115,13 +115,13 @@ func TestActivityLogCreateUpdateDelete(t *testing.T) {
 		ctx := authctx.WithUser(context.Background(), &model.User{ID: 88})
 
 		response, err := svc.Create(ctx, &proto.CreateActivityLogRequest{
-			Content: "  收拾客厅并给猫喂罐头  ", OccurredAt: "2026-09-02T08:30:00+08:00",
+			Content: "  收拾客厅并洗澡  ", OccurredAt: "2026-09-02T08:30:00+08:00",
 			DurationMinutes: 45, InputType: model.ActivityInputTypeText,
 		})
 
 		So(err, ShouldBeNil)
 		So(response.Id, ShouldEqual, "21")
-		So(response.Content, ShouldEqual, "收拾客厅并给猫喂罐头")
+		So(response.Content, ShouldEqual, "收拾客厅并洗澡")
 		So(response.DurationMinutes, ShouldEqual, int32(45))
 		So(response.Creator.Nickname, ShouldEqual, "晚风收藏家")
 		So(repository.created, ShouldNotBeNil)

@@ -28,10 +28,10 @@ func TestTaskVoiceServiceRecognize(t *testing.T) {
 	Convey("语音识别后返回待确认的任务草稿", t, func() {
 		now := time.Date(2026, 9, 3, 9, 30, 0, 0, time.FixedZone("CST", 8*60*60))
 		recognizer := &speechRecognizerStub{result: &Recognition{
-			Text: "记得买猫粮，顺便买两个罐头。", AudioDurationMS: 3600, RequestID: "asr-task-1",
+			Text: "记得买零食，顺便买香蕉。", AudioDurationMS: 3600, RequestID: "asr-task-1",
 		}}
 		organizer := &taskOrganizerStub{draft: &TaskDraft{
-			Title: "购买猫粮", Description: "顺便买两个罐头", Category: "生活",
+			Title: "购买零食", Description: "顺便买香蕉", Category: "生活",
 		}}
 		svc := NewTaskVoiceService(recognizer, organizer, 1024)
 		svc.now = func() time.Time { return now }
@@ -43,10 +43,10 @@ func TestTaskVoiceServiceRecognize(t *testing.T) {
 		So(err, ShouldBeNil)
 		So(string(recognizer.audio), ShouldEqual, "fake-mp3")
 		So(recognizer.format, ShouldEqual, "mp3")
-		So(organizer.rawText, ShouldEqual, "记得买猫粮，顺便买两个罐头。")
+		So(organizer.rawText, ShouldEqual, "记得买零食，顺便买香蕉。")
 		So(organizer.now, ShouldResemble, now)
-		So(resp.GetTitle(), ShouldEqual, "购买猫粮")
-		So(resp.GetDescription(), ShouldEqual, "顺便买两个罐头")
+		So(resp.GetTitle(), ShouldEqual, "购买零食")
+		So(resp.GetDescription(), ShouldEqual, "顺便买香蕉")
 		So(resp.GetCategory(), ShouldEqual, "生活")
 		So(resp.GetAudioDurationMs(), ShouldEqual, int64(3600))
 		So(resp.GetAsrRequestId(), ShouldEqual, "asr-task-1")

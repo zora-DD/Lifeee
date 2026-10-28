@@ -21,7 +21,7 @@ test('任务 AI 总结会传递刷新参数并补齐数组字段', async () => {
     todo_count: 3,
     overdue_count: 1,
     ai_generated: true,
-    focus_tasks: [{ id: '8', title: '买猫粮', due_at: '2026-09-14T18:00:00+08:00' }],
+    focus_tasks: [{ id: '8', title: '买零食', due_at: '2026-09-14T18:00:00+08:00' }],
   })
   const { AISummaryService } = require('../services/ai-summary-service')
 

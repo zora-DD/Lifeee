@@ -35,11 +35,11 @@ func TestListTasksResponseMarshalJSON(t *testing.T) {
 func TestRecognizeTaskVoiceResponseMarshalJSON(t *testing.T) {
 	Convey("语音任务草稿使用前端约定的字段名", t, func() {
 		payload, err := json.Marshal(&RecognizeTaskVoiceResponse{
-			RawText: "买猫粮", Title: "购买猫粮", Category: "生活", AudioDurationMs: 1800,
+			RawText: "买零食", Title: "购买零食", Category: "生活", AudioDurationMs: 1800,
 		})
 
 		So(err, ShouldBeNil)
-		So(string(payload), ShouldContainSubstring, `"rawText":"买猫粮"`)
+		So(string(payload), ShouldContainSubstring, `"rawText":"买零食"`)
 		So(string(payload), ShouldContainSubstring, `"audioDurationMs":1800`)
 	})
 }

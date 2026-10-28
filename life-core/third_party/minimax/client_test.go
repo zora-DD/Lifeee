@@ -22,7 +22,7 @@ func TestMiniMaxOrganize(t *testing.T) {
 			anthropicVersion <- r.Header.Get("anthropic-version")
 			w.Header().Set("Content-Type", "application/json")
 			_, _ = fmt.Fprint(w, `{"content":[{"type":"thinking","thinking":"整理中"},{"type":"text","text":"`+
-				"```json\\n{\\\"content\\\":\\\"收拾客厅并喂猫\\\",\\\"occurred_at\\\":\\\"2026-09-03T08:00:00+08:00\\\",\\\"duration_minutes\\\":30}\\n```"+
+				"```json\\n{\\\"content\\\":\\\"收拾客厅并洗澡\\\",\\\"occurred_at\\\":\\\"2026-09-03T08:00:00+08:00\\\",\\\"duration_minutes\\\":30}\\n```"+
 				`"}]}`)
 		}))
 		defer server.Close()
@@ -31,12 +31,12 @@ func TestMiniMaxOrganize(t *testing.T) {
 		})
 		So(err, ShouldBeNil)
 
-		draft, err := client.Organize(context.Background(), "我收拾客厅和喂猫，半小时", time.Now())
+		draft, err := client.Organize(context.Background(), "我收拾客厅和洗澡，半小时", time.Now())
 
 		So(err, ShouldBeNil)
 		So(<-apiKey, ShouldEqual, "test-key")
 		So(<-anthropicVersion, ShouldEqual, "2023-06-01")
-		So(draft.Content, ShouldEqual, "收拾客厅并喂猫")
+		So(draft.Content, ShouldEqual, "收拾客厅并洗澡")
 		So(draft.DurationMinutes, ShouldEqual, 30)
 	})
 
@@ -54,7 +54,7 @@ func TestMiniMaxOrganizeTask(t *testing.T) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
 			_, _ = fmt.Fprint(w, `{"content":[{"type":"text","text":"`+
-				`{\"title\":\"购买猫粮\",\"description\":\"顺便买两个罐头\",\"category\":\"生活\"}`+
+				`{\"title\":\"购买零食\",\"description\":\"顺便买香蕉\",\"category\":\"生活\"}`+
 				`"}]}`)
 		}))
 		defer server.Close()
@@ -63,11 +63,11 @@ func TestMiniMaxOrganizeTask(t *testing.T) {
 		})
 		So(err, ShouldBeNil)
 
-		draft, err := client.OrganizeTask(context.Background(), "记得买猫粮，顺便买两个罐头", time.Now())
+		draft, err := client.OrganizeTask(context.Background(), "记得买零食，顺便买香蕉", time.Now())
 
 		So(err, ShouldBeNil)
-		So(draft.Title, ShouldEqual, "购买猫粮")
-		So(draft.Description, ShouldEqual, "顺便买两个罐头")
+		So(draft.Title, ShouldEqual, "购买零食")
+		So(draft.Description, ShouldEqual, "顺便买香蕉")
 		So(draft.Category, ShouldEqual, "生活")
 	})
 

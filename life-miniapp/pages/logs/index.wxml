@@ -28,7 +28,7 @@
         </view>
 
         <textarea class="log-input" value="{{content}}" maxlength="1000" auto-height cursor-spacing="24"
-          placeholder="例如：收拾客厅半小时，给猫喂了罐头……" bindinput="onContentInput"></textarea>
+          placeholder="例如：收拾客厅半小时，洗澡……" bindinput="onContentInput"></textarea>
 
         <view class="meta-row">
           <picker class="meta-picker" mode="date" value="{{dateValue}}" bindchange="onDateChange">

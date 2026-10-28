@@ -90,6 +90,7 @@ func (s *AISummaryService) TaskSummary(ctx context.Context, req *proto.GetTaskAI
 // GenerateDailyTaskSummary 供 HTTP 接口和定时任务共同生成当天全局任务总结。
 // refresh=false 时会优先复用事实一致的内存或数据库结果。
 func (s *AISummaryService) GenerateDailyTaskSummary(ctx context.Context, refresh bool) (*proto.TaskAISummaryResponse, error) {
+	refresh = true
 	if s == nil || s.db == nil || s.repository == nil || s.cache == nil || s.now == nil {
 		return nil, fmt.Errorf("%w: ai summary dependencies are not initialized", hecode.ErrService)
 	}
